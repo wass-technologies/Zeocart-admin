@@ -1,0 +1,258 @@
+.cursor-pointer {
+   cursor: pointer;
+}
+
+.h-full {
+   height: 100%;
+}
+
+.h-10-r {
+   height: 10rem;
+}
+
+.h-5-r {
+   height: 5rem;
+}
+
+.h-1-r {
+   height: 1rem;
+}
+
+.w-1-r {
+   width: 1rem;
+}
+
+.h-2-r {
+   height: 2rem;
+}
+.h-2-5-r {
+   height: 2.5rem;
+}
+.w-2-r {
+   width: 2rem;
+}
+
+.w-30-r {
+   width: 30rem;
+}
+.align-center{
+   align-items: center;
+}
+.w-25-r {
+   width: 25rem;
+}
+.overflow-hidden{
+   overflow: hidden;
+}
+.w-20-r {
+   width: 20rem;
+}
+
+.w-15-r {
+   width: 15rem;
+}
+
+.w-11-r {
+   width: 11rem;
+}
+
+.w-10-r {
+   width: 10rem;
+}
+
+.w-8-r {
+   width: 8rem;
+}
+
+.w-7-r {
+   width: 7rem;
+}
+
+.w-6-r {
+   width: 6rem;
+}
+
+.w-5-r {
+   width: 5rem;
+}
+
+.w-4-r {
+   width: 4rem;
+}
+
+.w-3-r {
+   width: 3rem;
+}
+
+.w-6-r {
+   width: 6rem;
+}
+
+.zindex-999 {
+   z-index: 999;
+}
+
+.bgLightBlack {
+   background-color: #8b8888a1 !important;
+}
+
+.tooltipCustom {
+   position: absolute;
+   z-index: 10;
+   bottom: -43px;
+   left: 50%;
+   transform: translateX(-50%);
+   width: max-content;
+   max-width: max-content;
+   background: rgb(27, 27, 27);
+   border-radius: 5px;
+   min-height: 30px;
+   font-size: 0.75rem;
+   color: white;
+   display: none;
+   align-items: center;
+   justify-content: center;
+   transition: all 0.4s linear;
+   padding: 5px 8px;
+   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+   text-align: center;
+
+   &::before {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      content: "";
+      display: block;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-bottom: 10px solid gray;
+
+   }
+}
+
+.action-icon {
+   display: flex;
+   transition: all 0.4s linear;
+   position: relative;
+
+   .tooltipCustom {
+      left: auto;
+      transform: translateX(0);
+      top: 50%;
+      bottom: auto;
+      transform: translateY(-50%);
+      // display: block;
+      right: 35px;
+
+      &::before {
+         left: auto;
+         transform: translateX(0);
+         top: 50%;
+         right: -18px;
+         bottom: auto;
+         transform: translateY(-50%);
+         border-bottom: none;
+         border: 9px solid transparent;
+         border-left-color: gray;
+      }
+   }
+
+   img {
+      height: 0.9rem !important;
+      width: 0.9rem !important;
+   }
+}
+
+.action-icon:hover {
+   box-shadow: none;
+
+   .tooltipCustom {
+      transition: all 0.4s linear;
+      display: flex !important;
+   }
+}
+
+// Pagination
+.custom-paginations {
+   display: flex;
+   justify-content: space-between;
+   padding: 0 0.5rem 2rem 0;
+
+   .right-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.4rem;
+
+      .doted{
+         font-weight: bold;
+      }
+      .page-name-button {
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         border-radius: 50%;
+         // border: 1px solid blue;
+         background-color: rgba(128, 128, 128, 0.568);
+         color: black;
+         height: 1.9rem;
+         width: 1.9rem;
+      }
+
+      .active {
+         background-color: blue;
+         color: #ffffff;
+      }
+
+      button {
+         width: 1.8rem;
+         height: 1.8rem;
+         border: none;
+         cursor: pointer;
+         border-radius: 50%;
+      }
+
+      .disabled {
+         cursor: not-allowed;
+         opacity: 0.4;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         background-color: #2323f8;
+         width: 1.9rem;
+         height: 1.9rem;
+         border-radius: 50%;
+         svg{
+            color: white;
+         }
+      }
+
+      .right-arr {
+         display: flex;
+         align-items: center;
+         cursor: pointer;
+         justify-content: center;
+         background-color: #2323f8;
+         width: 1.9rem;
+         height: 1.9rem;
+         border-radius: 50%;
+         svg{
+            color: white;
+         }
+      }
+
+      .left-arr {
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         cursor: pointer;
+         background-color: #2323f8;
+         width: 1.9rem;
+         height: 1.9rem;
+         border-radius: 50%;
+         svg{
+            color: white;
+         }
+      }
+   }
+}
