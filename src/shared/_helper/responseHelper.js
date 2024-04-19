@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import { ReturnLogin } from './ReturnLogin';
 
 export const errorHandler = (res) => {
+	console.log(res);
 	if (res.status === 401) {
 		toast.error(res.data.message);
 		localStorage.removeItem("accessToken");

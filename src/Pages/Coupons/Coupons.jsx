@@ -177,7 +177,7 @@ const Coupons = () => {
     console.log(formVar);
     dispatch(addCoupon({
       couponCode: formVar.name, discountAmount: formVar.discount, expirationDate: formVar.expirationDate, issuedDate: formVar.issueDate,
-      usageLimit: formVar.formlimit, userRestrictions: formVar.userType, coupanFor: formVar.type, minPurchaseAmount: formVar.minpurchase
+      usageLimit: formVar.formlimit, userRestrictions: formVar.userType, coupanFor: formVar.type, minPurchaseAmount: formVar.minpurchase, status: formVar.formstatus
     }))
   }
   const EditDetails = () => {

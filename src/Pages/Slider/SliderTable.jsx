@@ -159,9 +159,7 @@ const SliderTable = () => {
               <Col md="4">
               </Col>
               <Col md="3" className='d-flex justify-content-end align-items-center'>
-                {/* <div className="text-end">
-                    <Link className="btn btn-primary" style={{ color: 'white', }} to={`${process.env.PUBLIC_URL}/app/project/new-project`}> New Degree</Link>
-                  </div> */}
+
                 <div className="text-end border-2">
                   <Btn attrBtn={{ color: 'info-gradien', size: 'sm', onClick: AddToggleModal }}>
                     Add Slider
@@ -169,12 +167,6 @@ const SliderTable = () => {
                 </div>
               </Col>
             </Row>
-            {/* <div className="text-end">
-              <Btn attrBtn={{ color: 'info-gradien', size: 'sm', active: false, disabled: false, outline: false  }}>
-                Add State
-              </Btn>
-            </div> */}
-
           </CardHeader>
           <div className='table-responsive'>
             <Table hover={true} className='table-border-horizontal table-light'>
@@ -182,6 +174,7 @@ const SliderTable = () => {
                 <tr>
                   <th scope='col'>Sl.No</th>
                   <th scope='col'>Image</th>
+                  <th scope='col'>Type</th>
                   <th scope='col'>Status</th>
                   <th scope='col'>Action</th>
                 </tr>
@@ -191,10 +184,9 @@ const SliderTable = () => {
                   <tr key={item.id}>
                     <th scope='row'>{index + 1}</th>
                     <td className='w-25'>
-                      {/* <div className="w-25"> */}
                       <img className='w-8-r h-5-r' src={item.image} alt="" />
-                      {/* </div> */}
                     </td>
+                    <td>{item.type}</td>
                     <td>
                       <span className={`${item.bgClass} w-50 rounded-1 p-1 me-2 d-flex align-items-center`}>
                         {item.status === 'ACTIVE' && <CheckCircle />}

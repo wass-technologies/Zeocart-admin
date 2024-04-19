@@ -43,7 +43,7 @@ const UsersTable = () => {
 
   const searchState = () => {
     dispatch(getUser(formVar.limit, formVar.offset, formVar.keyword, formVar.fromDate, formVar.toDate))
-  }
+  } 
   const pageChange = (page) => {
     console.log(page);
     const offset = formVar.limit * (page - 1)
@@ -158,7 +158,6 @@ const UsersTable = () => {
                   <th scope='col'>Name</th>
                   <th scope='col'>Email</th>
                   <th scope='col'>Phone Number</th>
-                  <th scope='col'>Gender</th>
                   <th scope='col'>Address</th>
                   <th scope='col'>Action</th>
                 </tr>

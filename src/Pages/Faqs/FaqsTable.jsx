@@ -8,12 +8,12 @@ import { useNavigate } from "react-router-dom";
 import { addFaqs, getFaqs, updateFaqs, ModalToggle, isOpenModal, isOpenStatusModal, statusToggle, statusUpdateFaqStatus, statusDeleteFaq } from '../../store/faqsSlice';
 import CustomizerContext from '../../_helper/Customizer';
 import Pagination from '../../Components/Pagination/Pagination';
-import SweetAlert from 'sweetalert2'; 
+import SweetAlert from 'sweetalert2';
 
 
 const FaqsTable = () => {
   const storeVar = useSelector(state => state.faqs)
-  const dispatch = useDispatch(); 
+  const dispatch = useDispatch();
   const history = useNavigate();
   const toggle = () => dispatch(ModalToggle());
   const statusModalToggle = () => dispatch(statusToggle());
@@ -21,11 +21,11 @@ const FaqsTable = () => {
   const [submit, setSubmit] = useState(false);
   const [stateStatus, setStateStatus] = useState('ACTIVE');
   const [formVar, setFormVar] = useState({
-    
+
     limit: 10,
     offset: 0,
-    currentPage:1,
-    status: 'ACTIVE', 
+    currentPage: 1,
+    status: 'ACTIVE',
     modalTitle: null,
     editState: false,
     faqsId: null,
@@ -59,7 +59,7 @@ const FaqsTable = () => {
     dispatch(getFaqs(formVar.limit, formVar.offset, e.target.value, formVar.keyword))
   };
   const EditToggleModal = (data) => {
-   
+
     dispatch(isOpenModal(true))
     setFormVar((prevFormVar) => ({
       ...prevFormVar,
@@ -78,6 +78,8 @@ const FaqsTable = () => {
       ...prevFormVar,
       editState: false,
       modalTitle: 'Add FAQ',
+      question: '',
+      answer: '',
     }))
   }
   const statusToggleModal = (data) => {
@@ -102,14 +104,14 @@ const FaqsTable = () => {
         return null
       }
       setSubmit(false)
-      dispatch(updateFaqs({ id: formVar.faqsId, question: formVar.question, answer: formVar.answer, status: formVar.faqStatus, faqFor: formVar.faqFor }))
+      dispatch(updateFaqs({ id: formVar.faqsId, answer: formVar.answer }))
     } else {
-      if (questionValid() || statusValid() || faqForValid()) {
+      if (questionValid()) {
         setSubmit(true)
         return null
       }
       setSubmit(false)
-      dispatch(addFaqs({ question: formVar.question, answer: formVar.answer, status: formVar.faqStatus, faqFor: formVar.faqFor }))
+      dispatch(addFaqs({ question: formVar.question }))
     }
   }
 
@@ -119,16 +121,7 @@ const FaqsTable = () => {
       return "question name is required";
     }
   }
-  const statusValid = () => {
-    if (!formVar.status) {
-      return "Status is required";
-    }
-  }
-  const faqForValid = () => {
-    if (!formVar.faqFor) {
-      return "FAQ for is required";
-    }
-  }
+
   const answerValid = () => {
     if (!formVar.answer) {
       return "Answer is required";
@@ -140,7 +133,7 @@ const FaqsTable = () => {
       text: 'Once deleted, you will not be able to recover this imaginary file!',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Ok', 
+      confirmButtonText: 'Ok',
       cancelButtonText: 'cancel',
       reverseButtons: true
     })
@@ -254,33 +247,24 @@ const FaqsTable = () => {
           </div>
         </Card>
         {
-          storeVar.faqsData.length>0 &&
-        <Pagination currentPage={formVar.currentPage} totalItem={storeVar.totalFaq}
-          itemsPerPage={formVar.limit} showEllipsisAfter={true} visiblePageCount={3} onPageChange={pageChange} />
+          storeVar.faqsData.length > 0 &&
+          <Pagination currentPage={formVar.currentPage} totalItem={storeVar.totalFaq}
+            itemsPerPage={formVar.limit} showEllipsisAfter={true} visiblePageCount={3} onPageChange={pageChange} />
         }
       </Col>
       <CommonModal isOpen={storeVar.isOpenModal} title={formVar.modalTitle} toggler={toggle} >
         <Form>
           <FormGroup>
             {!formVar.editState && <>
-              <Label className="col-form-label" for="recipient-name">Name</Label>
+              <Label className="col-form-label" for="recipient-name">Question</Label>
               <Input className="form-control" type="text" placeholder='Enter Question' onChange={(e) => setFormVar((prevFormVar) => ({ ...prevFormVar, question: e.target.value }))} value={formVar.question} />
               {submit && questionValid() ? <span className='d-block font-danger'>{questionValid()}</span> : ""}
             </>}
-              <Row>
-                <Col md="6">
-                  <Label className="col-form-label" for="recipient-name">Status</Label>
-                  <Input className="form-control form-control-inverse btn-square" name="select" type="select"
-                    value={formVar.faqStatus} onChange={(e) => setFormVar((prevFormVar) => ({ ...prevFormVar, faqStatus: e.target.value }))}>
-                    <option value='ACTIVE'>ACTIVE</option>
-                    <option value='DEACTIVE'>DEACTIVE</option>
-                    <option value='PENDING'>PENDING</option>
-                  </Input>
-                  {submit && statusValid() ? <span className='d-block font-danger'>{statusValid()}</span> : ""}
-                </Col>
-              </Row>
-            <Label className="col-form-label" for="recipient-name">Answer</Label>
-            <textarea className='form-control' name='description' rows='3' onChange={(e) => setFormVar((prevFormVar) => ({ ...prevFormVar, answer: e.target.value }))} value={formVar.answer} />
+            {formVar.editState && <>
+              <Label className="col-form-label" for="recipient-name">Answer</Label>
+              <textarea className='form-control' name='description' rows='3' onChange={(e) => setFormVar((prevFormVar) => ({ ...prevFormVar, answer: e.target.value }))} value={formVar.answer} />
+              {submit && answerValid() ? <span className='d-block font-danger'>{answerValid()}</span> : ""}
+            </>}
           </FormGroup>
         </Form>
         <ModalFooter>

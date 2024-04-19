@@ -4,10 +4,8 @@ import { Btn } from '../../AbstractElements';
 import { CheckCircle, XCircle, Trash2, Edit, Image, FileText } from "react-feather"
 import { useDispatch, useSelector } from 'react-redux';
 import CommonModal from '../../Components/Modals/modal';
-import { getDegree, addDegree, updateDegree, statusUpdateDegree } from '../../store/degreeSlice';
 import Dropzone from 'react-dropzone-uploader';
 import NoImage from '../../assets/images/noimage.png';
-import { fetchbrand, addBrand, updateBrand, statusUpdateBrandStatus, statusDeleteBrandStatus, ImagestatusToggle, updateImageBrands } from '../../store/brandsSlice';
 import { fetchblogs, isOpenModal, isOpenStatusModal, statusToggle, statusUpdateBlogStatus, ModalToggle, updateBlogs, addBlogs, isImageOpenModal, updateImageBlogs } from '../../store/blogSlice';
 import Pagination from '../../Components/Pagination/Pagination';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
@@ -86,7 +84,7 @@ const Blogs = () => {
       .then((result) => {
         if (result.value) {
           console.log(data);
-          dispatch(statusDeleteBrandStatus(data.id, 'DELETED'))
+          // dispatch(statusDeleteBrandStatus(data.id, 'DELETED'))
 
         }
       });

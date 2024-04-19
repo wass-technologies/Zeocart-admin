@@ -28,19 +28,6 @@ export const MENUITEMS = [
     menutitle: "Applications",
     menucontent: "Ready to use Apps",
     Items: [
-      // {
-      //   title: "Users",
-      //   icon: "user",
-      //   path: `${process.env.PUBLIC_URL}/app/users/profile`,
-      //   type: "sub",
-      //   bookmark: true,
-      //   active: false,
-      //   children: [
-          // { path: `${process.env.PUBLIC_URL}/app/users/profile`, type: "link", title: "User Profile" },
-          // { path: `${process.env.PUBLIC_URL}/app/users/edit`, type: "link", title: "User Edit" },
-          // { path: `${process.env.PUBLIC_URL}/app/users/cards`, type: "link", title: "User Cards" },
-      //   ],
-      // },
       { path: `${process.env.PUBLIC_URL}/coupons`, icon: "user", title: "Coupons", type: "link" },
       { path: `${process.env.PUBLIC_URL}/users`, icon: "staff", title: "Users", type: "link" },
     ],
@@ -63,7 +50,6 @@ export const MENUITEMS = [
       { path: `${process.env.PUBLIC_URL}/blogs`, icon: "banner", type: "link", active: false, title: "Blogs" },
       { path: `${process.env.PUBLIC_URL}/slider`, icon: "slider", type: "link", active: false, title: "Slider" },
       { path: `${process.env.PUBLIC_URL}/faqs`, icon: "faqs", type: "link", active: false, title: "FAQ" },
-      { path: `${process.env.PUBLIC_URL}/settings`, icon: "setting", type: "link", active: false, title: "Settings" },
     ],
   },
 ];

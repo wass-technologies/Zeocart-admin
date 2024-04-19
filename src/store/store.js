@@ -58,11 +58,7 @@ export const store = configureStore({
     bannerSpecialization:bannerSpecializationReducer,
     slider:sliderReducer,
     sliderSpecialization:sliderSpecializationReducer,
-    settings:settingsReducer,
-    specialization:specializationReducer,
-    diseases:diseasesReducer,
-    languages:languagesReducer,
-    diseaseQuestions:diseaseQuestionsReducer,
+    
     users:userReducer,
     staff:staffReducer,
   },

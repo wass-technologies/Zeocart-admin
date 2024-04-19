@@ -357,200 +357,6 @@ async function statusUpdateSlider(id, status) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-async function getStaff(limit, offset, status, keyword, role) {
-  return await axios.get(userUrl+ 'keyword&limit=10&offset=0&status=ACTIVE&role=USER', {
-    headers: await authHeader(),
-  });
-}
-async function addStaff(payload) {
-  return await axios.post(accountURL, payload, {
-    headers: await authHeader(),
-  });
-}
-async function updateStaffPermission(id, menu) {
-  console.log({ id, menu });
-  return await axios.put(userPermissionsURL + '/' + id, { menu }, {
-    headers: await authHeader(),
-  });
-}
-async function statusUpdateStaff(id, status) {
-  return await axios.put(accountURL + '/' + id, { status }, {
-    headers: await authHeader(),
-  });
-}
-async function updateStaff(id, payload) {
-  delete payload.id
-  return await axios.patch(staffDetailsURL + '/profile/' + id, payload, {
-    headers: await authHeader(),
-  });
-}
-async function getStaffById(id) {
-  return await axios.get(staffDetailsURL + '/' + id, {
-    headers: await authHeader(),
-  });
-}
-async function getState(limit, offset, status, keyword) {
-  return await axios.get(stateURL + '/list/all?limit=' + limit + '&offset=' + offset + '&status=' + status + '&keyword=' + keyword, {
-    headers: await authHeader(),
-  });
-}
-async function addState(payload) {
-  return await axios.post(stateURL, payload, {
-    headers: await authHeader(),
-  });
-}
-async function updateState(id, name) {
-  return await axios.patch(stateURL + '/' + id, { name }, {
-    headers: await authHeader(),
-  });
-}
-async function statusUpdateState(id, status) {
-  return await axios.put(stateURL + '/status/' + id, { status }, {
-    headers: await authHeader(),
-  });
-}
-
-async function getCity(limit, offset, status, keyword, id) {
-  return await axios.get(cityURL + '/list/all/' + id + '?limit=' + limit + '&offset=' + offset + '&status=' + status + '&keyword=' + keyword, {
-    headers: await authHeader(),
-  });
-}
-async function addCity(payload) {
-  return await axios.post(cityURL, payload, {
-    headers: await authHeader(),
-  });
-}
-async function updateCity(id, name, stateId) {
-  return await axios.patch(cityURL + '/' + id, { name, stateId }, {
-    headers: await authHeader(),
-  });
-}
-async function statusUpdateCity(id, status) {
-  return await axios.put(cityURL + '/status/' + id, { status }, {
-    headers: await authHeader(),
-  });
-}
-
-async function getArea(limit, offset, status, keyword, id) {
-  return await axios.get(areaURL + '/list/all/' + id + '?limit=' + limit + '&offset=' + offset + '&status=' + status + '&keyword=' + keyword, {
-    headers: await authHeader(),
-  });
-}
-async function addArea(payload) {
-  return await axios.post(areaURL, payload, {
-    headers: await authHeader(),
-  });
-}
-async function updateArea(id, name, pincode, cityId) {
-  return await axios.patch(areaURL + '/' + id, { name, pincode, cityId }, {
-    headers: await authHeader(),
-  });
-}
-async function statusUpdateArea(id, status) {
-  return await axios.put(areaURL + '/status/' + id, { status }, {
-    headers: await authHeader(),
-  });
-}
-
-async function getDegree(limit, offset, status, keyword) {
-  return await axios.get(degreeURL + '?limit=' + limit + '&offset=' + offset + '&status=' + status + '&keyword=' + keyword, {
-    headers: await authHeader(),
-  });
-}
-async function addDegree(payload) {
-  return await axios.post(degreeURL + '/add', payload, {
-    headers: await authHeader(),
-  });
-}
-async function updateDegree(id, name) {
-  return await axios.patch(degreeURL + '/' + id, { name }, {
-    headers: await authHeader(),
-  });
-}
-async function statusUpdateDegree(id, status) {
-  return await axios.put(degreeURL + '/' + id, { status }, {
-    headers: await authHeader(),
-  });
-}
-
-
-async function getSpecialization(limit, offset, status, keyword) {
-  return await axios.get(specializationURL + '/all?limit=' + limit + '&offset=' + offset + '&status=' + status + '&keyword=' + keyword, {
-    headers: await authHeader(),
-  });
-}
-async function addSpecialization(payload) {
-  return await axios.post(specializationURL, payload, {
-    headers: await authHeader(),
-  });
-}
-async function updateSpecialization(id, payload) {
-  delete payload.id
-  return await axios.patch(specializationURL + '/' + id, payload, {
-    headers: await authHeader(),
-  });
-}
-async function statusUpdateSpecialization(id, status) {
-  return await axios.put(specializationURL + '/' + id, { status }, {
-    headers: await authHeader(),
-  });
-}
-async function addSpecializationBanner(id, payload) {
-  delete payload.id
-  console.log(payload);
-  return await axios.put(specializationURL + '/image/' + id, payload, {
-    headers: await authHeader("FormData"),
-  });
-}
-// Faq
-
-async function getFaqsSpecialization(limit, offset, keyword, faqId) {
-  console.log({ limit, offset, keyword, faqId });
-  return await axios.get(faqSpecializationURL + '/' + faqId + '?limit=' + limit + '&offset=' + offset + '&keyword=' + keyword, {
-    headers: await authHeader(),
-  });
-}
-async function addFaqsSpecialization(faqId, specialization) {
-  console.log({ faqId, specialization });
-  return await axios.post(faqSpecializationURL + '/' + faqId, specialization, {
-    headers: await authHeader(),
-  });
-}
-async function deleteFaqsSpecialization(id) {
-  return await axios.delete(faqSpecializationURL + '/' + id, {
-    headers: await authHeader(),
-  });
-}
-
 //banner
 async function getBanner(limit, offset, status, keyword, id) {
   console.log({ limit, offset, status, keyword });
@@ -569,24 +375,6 @@ async function updateBannerImage(id, file) {
   });
 }
 
-
-async function getBannerSpecialization(limit, offset, keyword, bannerId) {
-  console.log({ limit, offset, keyword, bannerId });
-  return await axios.get(bannerSpecializationURL + '/' + bannerId + '?limit=' + limit + '&offset=' + offset + '&keyword=' + keyword, {
-    headers: await authHeader(),
-  });
-}
-async function addBannerSpecialization(bannerId, specialization) {
-  console.log({ bannerId, specialization });
-  return await axios.post(bannerSpecializationURL + '/' + bannerId + '/' + settingsId, specialization, {
-    headers: await authHeader(),
-  });
-}
-async function deleteBannerSpecialization(id) {
-  return await axios.delete(bannerSpecializationURL + '/' + id, {
-    headers: await authHeader(),
-  });
-}
 
 
 
@@ -625,100 +413,16 @@ async function updatePage(id, title, desc) {
     headers: await authHeader(),
   });
 }
-async function getDiseases(limit, offset, status, keyword) {
-  return await axios.get(diseasesURL + '/list/all?limit=' + limit + '&offset=' + offset + '&status=' + status + '&keyword=' + keyword, {
-    headers: await authHeader(),
-  })
-}
-async function addDiseases(payload) {
-  console.log({ payload });
-  return await axios.post(diseasesURL + '/' + settingsId, payload, {
-    headers: await authHeader(),
-  });
-}
-async function updateDiseases(id, name, top) {
-  console.log({ id, name, top });
-  return await axios.patch(diseasesURL + '/' + id, { name, top }, {
-    headers: await authHeader(),
-  });
-}
-async function statusUpdateDiseases(id, status) {
-  return await axios.put(diseasesURL + '/status/' + id, { status }, {
-    headers: await authHeader(),
-  });
-}
-async function addDiseasesLogo(id, payload) {
-  delete payload.id
-  console.log(payload);
-  return await axios.put(diseasesURL + '/' + id, payload, {
-    headers: await authHeader("FormData"),
-  });
-}
-async function addDiseasesTopLogo(id, payload) {
-  delete payload.id
-  console.log(payload);
-  return await axios.put(diseasesURL + '/most/' + id, payload, {
-    headers: await authHeader("FormData"),
-  });
-}
 
-async function getLanguages(limit, offset, status, keyword) {
-  return await axios.get(languagesURL + '/all?limit=' + limit + '&offset=' + offset + '&status=' + status + '&keyword=' + keyword, {
-    headers: await authHeader(),
-  })
-}
-async function addLanguages(payload) {
-  console.log({ payload });
-  return await axios.post(languagesURL, payload, {
-    headers: await authHeader(),
-  });
-}
-async function updateLanguages(id, name) {
-  console.log({ id, name });
-  return await axios.patch(languagesURL + '/' + id, { name }, {
-    headers: await authHeader(),
-  });
-}
-async function statusUpdateLanguages(id, status) {
-  return await axios.put(languagesURL + '/' + id, { status }, {
-    headers: await authHeader(),
-  });
-}
 
-async function getDiseaseQuestions(limit, offset, status, keyword, gender, diseaseId, specializationId, questionId, optionId) {
-  console.log({ limit, offset, status, keyword, gender, diseaseId, specializationId, questionId, optionId });
-  return await axios.get(diseaseQuestionsURL + '/all?limit=' + limit + '&offset=' + offset + '&status=' +
-    status + '&keyword=' + keyword + '&gender=' + gender + '&diseaseId=' + diseaseId + '&specializationId=' + specializationId + '&questionId=' + questionId +
-    '&optionId=' + optionId, {
-    headers: await authHeader(),
-  })
-}
-async function addDiseaseQuestions(payload) {
-  console.log({ payload });
-  return await axios.post(diseaseQuestionsURL, payload, {
-    headers: await authHeader(),
-  });
-}
-async function statusUpdateDiseaseQuestions(id, status) {
-  return await axios.put(diseaseQuestionsURL + '/' + id, { status }, {
-    headers: await authHeader(),
-  });
-}
-
-async function updateDiseaseQuestions(id, payload) {
-  delete payload.id
-  return await axios.patch(diseaseQuestionsURL + '/' + id, payload, {
-    headers: await authHeader(),
-  });
-}
-async function getUser(limit, offset, keyword, fromDate, toDate) {
-  return await axios.get(patientDetailsURL + '?limit=' + limit + '&offset=' + offset + '&keyword=' + keyword
-    + '&fromDate=' + fromDate + '&toDate=' + toDate, {
+async function getUser(limit, offset, keyword) {
+  return await axios.get(accountURL + '/users?keyword='+keyword+'&limit='+limit+'&offset='+offset+'&status=ACTIVE&role=USER',
+   {
     headers: await authHeader(),
   })
 }
 async function getUserById(id) {
-  return await axios.get(patientDetailsURL + '/' + id, {
+  return await axios.get(accountURL + '' + id, {
     headers: await authHeader(),
   })
 }
@@ -727,10 +431,6 @@ export const service = {
   login,
   dashboard,
   dashboardpie,
-
-
- 
-  statusUpdateDegree,
 
   getFaqs,
   addFaqs,
@@ -800,48 +500,9 @@ export const service = {
 
 
 
-  getStaff,
-  getStaffById,
-  addStaff,
-  updateStaff,
-  statusUpdateStaff,
-  updateStaffPermission,
-
-  getState,
-  addState,
-  updateState,
-  statusUpdateState,
-  getCity,
-  addCity,
-  updateCity,
-  statusUpdateCity,
-
-  getArea,
-  addArea,
-  updateArea,
-  statusUpdateArea,
-  getDegree,
-  addDegree,
-  updateDegree,
-
-
-  getFaqsSpecialization,
-  addFaqsSpecialization,
-  deleteFaqsSpecialization,
-
-  getSpecialization,
-  addSpecialization,
-  statusUpdateSpecialization,
-  updateSpecialization,
-  addSpecializationBanner,
-
   getBanner,
   updateBannerUrl,
   updateBannerImage,
-
-  getBannerSpecialization,
-  addBannerSpecialization,
-  deleteBannerSpecialization,
 
   getSlider,
   addSlider,
@@ -853,22 +514,8 @@ export const service = {
   deleteSliderSpecialization,
 
  
-  getDiseases,
-  addDiseases,
-  updateDiseases,
-  statusUpdateDiseases,
-  addDiseasesLogo,
-  addDiseasesTopLogo,
 
-  getLanguages,
-  addLanguages,
-  updateLanguages,
-  statusUpdateLanguages,
 
-  getDiseaseQuestions,
-  addDiseaseQuestions,
-  statusUpdateDiseaseQuestions,
-  updateDiseaseQuestions,
 
   getUser,
   getUserById,

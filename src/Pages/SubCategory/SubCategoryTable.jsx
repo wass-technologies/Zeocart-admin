@@ -4,11 +4,11 @@ import { Btn } from '../../AbstractElements';
 import { CheckCircle, XCircle, Edit, FileText, Trash2 } from "react-feather"
 import { useDispatch, useSelector } from 'react-redux';
 import CommonModal from '../../Components/Modals/modal';
-import {  updateDegree } from '../../store/degreeSlice';
 import { getCategory } from '../../store/categorySlice';
-import { getsubCategory, isOpenModal, ModalToggle,statusToggle, isOpenStatusModal, addSubCategory, updatesubCategory, deleteSubCategoryStatus, statusSubCatDegree } from '../../store/subCategorySlice';
+import { getsubCategory, isOpenModal, ModalToggle, statusToggle, isOpenStatusModal, addSubCategory, updatesubCategory, deleteSubCategoryStatus, statusSubCatDegree } from '../../store/subCategorySlice';
 import Pagination from '../../Components/Pagination/Pagination';
 import SweetAlert from 'sweetalert2';
+import NoImage from '../../assets/images/noimage.png';
 
 const SubCategoryTable = () => {
   const catVar = useSelector(state => state.category)
@@ -208,6 +208,7 @@ const SubCategoryTable = () => {
                 <tr>
                   <th scope='col'>Sl.No</th>
                   <th scope='col'>Name</th>
+                  <th scope='col'>Banner</th>
                   <th scope='col'>Status</th>
                   <th scope='col'>Action</th>
                 </tr>
@@ -217,6 +218,10 @@ const SubCategoryTable = () => {
                   <tr key={item.id}>
                     <th scope='row'>{index + 1}</th>
                     <td>{item.name}</td>
+                    <td className={`w-25 ${item.image ? 'with-image' : 'no-image'}`}>
+                      {item.image && <img className='w-100 h-5-r' src={item.image} alt="" />}
+                      {!item.image && <img className='w-75 h-5-r' src={NoImage} alt="" />}
+                    </td>
                     <td>
                       {
                         item.status === 'ACTIVE' && <>

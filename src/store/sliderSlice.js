@@ -91,7 +91,6 @@ export function getSlider(limit, offset, status, keyword) {
         (response) => {
           dispatch(setLoading(false))
           dispatch(setSliderData(response.data))
-          console.log(response.data);
         }, (error) => {
           dispatch(setLoading(false))
           errorHandler(error.response)
