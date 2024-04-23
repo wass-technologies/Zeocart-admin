@@ -15,6 +15,8 @@ const initialState = {
   sliderData: [],
   isOpenModal: false,
   isStatusOpenModal:false,
+  isImageOpenModal: false,
+
 }
 
 export const sliderSlice = createSlice({
@@ -74,12 +76,18 @@ export const sliderSlice = createSlice({
     },
     statusToggle(state, { payload }) {
       state.isStatusOpenModal = !state.isStatusOpenModal
+    },
+    isImageOpenModal(state, { payload }) {
+      state.isImageOpenModal = payload
+    },
+    ImagestatusToggle(state, { payload }) {
+      state.isImageOpenModal = !state.isImageOpenModal
     }
   }
 })
 
 export const { setSliderData, updateSliderData,pushSlider, isOpenModal, 
-  ModalToggle,setFaqsSpecializationData,isOpenStatusModal,statusToggle,sliceSlider } = sliderSlice.actions;
+  ModalToggle, isOpenStatusModal,statusToggle, sliceSlider, ImagestatusToggle, isImageOpenModal } = sliderSlice.actions;
 
 export default sliderSlice.reducer;
 
@@ -108,7 +116,7 @@ export function addSlider(payload) {
       await service.addSlider(payload).then(
         (response) => {
           dispatch(setLoading(false))
-          dispatch(ModalToggle())
+          dispatch(ImagestatusToggle())
           successHandler('Added Successfully')
         }, (error) => {
           dispatch(setLoading(false))
@@ -143,9 +151,8 @@ export function statusUpdateSlider(payload) {
   return async function statusUpdateSliderThunk(dispatch) {
     try {
       dispatch(setLoading(true))
-      await service.statusUpdateSlider(payload.id,payload.status).then(
+      await service.statusUpdateSlider(payload.id,{status: payload.status}).then(
         (response) => {
-          console.log(response.data);
           dispatch(updateSliderData(response.data))
           dispatch(statusToggle())
           dispatch(setLoading(false))
@@ -161,3 +168,23 @@ export function statusUpdateSlider(payload) {
   }
 }
 
+export function updateType(id, type) {
+  return async function updateTypeThunk(dispatch) {
+    try {
+      dispatch(setLoading(true))
+      await service.statusUpdateSlider(id, {type: type}).then(
+        (response) => {
+          dispatch(updateSliderData(response.data))
+          dispatch(ModalToggle())
+          dispatch(setLoading(false))
+          successHandler('Updated Successfully')
+        }, (error) => {
+          dispatch(setLoading(false))
+          errorHandler(error.response)
+        }
+      );
+    } catch (err) {
+
+    }
+  }
+}

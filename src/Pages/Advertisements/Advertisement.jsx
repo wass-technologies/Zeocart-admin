@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import Dropzone from 'react-dropzone-uploader';
 import CustomizerContext from '../../_helper/Customizer';
 import { getAdvertisement, statusUpdateAdvertisement, addAdvertisement, DetailsUpdateAdvertisement, updateImageAdvertisement, deleteAdvertisement, isOpenStatusModal, statusToggle, ModalToggle, isOpenModal, ImagestatusToggle, isImageOpenModal } from '../../store/addvertiseSlice';
+import NoImage from '../../assets/images/noimage.png';
  
 const Advertisement = () => {
   const storeVar = useSelector(state => state.advertisement)
@@ -265,8 +266,7 @@ const Advertisement = () => {
                   <tr key={item.id}>
                     <th scope='row'>{index + 1}</th>
                     <td className='w-25'>
-                      <img className='w-100 h-5-r' src={item.image} alt="" />
-
+                      {item.image ? <img className='w-10-r h-5-r' src={item.image} alt="" /> : <img className='w-10-r h-5-r' src={NoImage} alt="" />}
                     </td>
                     <td className='w-5-r'>
                       <div className="w-15-r overflow-hidden h-2-5-r">
@@ -349,11 +349,11 @@ const Advertisement = () => {
           <FormGroup>
 
             <Row>
-              {/* <Col md='6'> */}
+              <Col md='12'>
                 <Label className="col-form-label" for="recipient-name">NAME</Label>
                 <Input className="form-control" type="text" onChange={(e) => setFormVar((prevFormVar) => ({ ...prevFormVar, name: e.target.value }))} value={formVar.name} />
 
-              {/* </Col> */}
+              </Col>
             </Row>
             <Row>
               <Col md='6'>

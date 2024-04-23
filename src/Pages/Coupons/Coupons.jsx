@@ -9,7 +9,7 @@ import CommonModal from '../../Components/Modals/modal';
 import { useNavigate } from "react-router-dom";
 import Dropzone from 'react-dropzone-uploader';
 import CustomizerContext from '../../_helper/Customizer';
-import { getCouponData, statusUpdateAdvertisement, addCoupon, DetailsUpdateAdvertisement, updateImageAdvertisement, deleteAdvertisement, isOpenStatusModal, statusToggle, ModalToggle, isOpenModal, ImagestatusToggle, isImageOpenModal } from '../../store/couponSlice';
+import { getCouponData, statusUpdateCoupons, addCoupon, DetailsUpdateAdvertisement, updateImageAdvertisement, deleteAdvertisement, isOpenStatusModal, statusToggle, ModalToggle, isOpenModal, ImagestatusToggle, isImageOpenModal } from '../../store/couponSlice';
 import Pagination from '../../Components/Pagination/Pagination';
  
  
@@ -238,7 +238,7 @@ const Coupons = () => {
 
 
   const submitStatus = () => {
-    dispatch(statusUpdateAdvertisement({ id: formVar.id, status: formVar.formstatus }))
+    dispatch(statusUpdateCoupons({ id: formVar.id, status: formVar.formstatus }))
   }
   // called every time a file's `status` changes
   
@@ -276,9 +276,6 @@ const Coupons = () => {
   }
 
 
-  const navigate = (id) => {
-    history(`${process.env.PUBLIC_URL}/banner-specialization/` + layoutURL + '?id=' + id)
-  }
   return (
     <Fragment>
       <Col sm='12'>
@@ -291,17 +288,8 @@ const Coupons = () => {
 
                 />
               </Col>
-              <Col md="2">
-                {/* <Nav tabs className="border-tab"> */}
-                <Input className="form-control form-control-inverse btn-square" name="select" type="select"
-                  value={formVar.userType} onChange={(e) => handletypeChange(e)}>
-                  <option value='ALL'>ALL</option>
-                  <option value='NEW'>NEW</option>
-                  <option value='OLD'>OLD</option>
-                </Input>
-                {/* </Nav> */}
-              </Col>
-              <Col md="2">
+              
+              <Col md="3">
                 {/* <Nav tabs className="border-tab"> */}
                 <Input className="form-control form-control-inverse btn-square" name="select" type="select"
                   value={formVar.type} onChange={(e) => handleproductChange(e)}>
@@ -311,7 +299,7 @@ const Coupons = () => {
                 </Input>
                 {/* </Nav> */}
               </Col>
-              <Col md="2">
+              <Col md="3">
                 {/* <Nav tabs className="border-tab"> */}
                 <Input className="form-control form-control-inverse btn-square" name="select" type="select"
                   value={formVar.status} onChange={(e) => handleInputChange(e)}>
@@ -553,7 +541,7 @@ const Coupons = () => {
           }
         </ModalFooter>
       </CommonModal>
-      {/* <CommonModal isOpen={storeVar.isStatusOpenModal} title={'Status'} toggler={statusModalToggle} >
+      <CommonModal isOpen={storeVar.isStatusOpenModal} title={'Status'} toggler={statusModalToggle} >
         <Col>
           <div className='d-flex m-15 m-checkbox-inline justify-content-center custom-radio-ml'>
             <div className='radio radio-primary'>
@@ -580,7 +568,7 @@ const Coupons = () => {
           <Btn attrBtn={{ color: 'secondary', onClick: statusModalToggle }} >Close</Btn>
           <Btn attrBtn={{ color: 'primary', onClick: submitStatus }}>Save Changes</Btn>
         </ModalFooter>
-      </CommonModal> */}
+      </CommonModal>
     </Fragment>
   );
 };

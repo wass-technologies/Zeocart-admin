@@ -1,130 +1,91 @@
-import React, { Fragment, useEffect, useState, useContext } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Col, Card, CardHeader, Table, Form, FormGroup, Label, Input, ModalFooter, Row } from 'reactstrap';
 import { Btn } from '../../AbstractElements';
-import { CheckCircle, XCircle, Edit, Trash2, FileText } from "react-feather"
+import { CheckCircle, XCircle, Edit, FileText, Trash2 } from "react-feather"
 import { useDispatch, useSelector } from 'react-redux';
 import CommonModal from '../../Components/Modals/modal';
-import { useNavigate } from "react-router-dom";
-import { addFaqs, getFaqs, updateFaqs, ModalToggle, isOpenModal, isOpenStatusModal, statusToggle, statusUpdateFaqStatus, statusDeleteFaq } from '../../store/faqsSlice';
-import CustomizerContext from '../../_helper/Customizer';
+import { getCategory, isOpenModal, statusToggle, addCategoryData, updatecategoryData, ModalToggle, isOpenStatusModal, statusUpdateCategory, statusDeleteCategoryStatus } from '../../store/categorySlice';
 import Pagination from '../../Components/Pagination/Pagination';
 import SweetAlert from 'sweetalert2';
+import moment from 'moment';
 
 
-const FaqsTable = () => {
-  const storeVar = useSelector(state => state.faqs)
+
+const PaymentsTable = () => {
+  const storeVar = useSelector(state => state.category)
+  console.log(storeVar);
   const dispatch = useDispatch();
-  const history = useNavigate();
   const toggle = () => dispatch(ModalToggle());
   const statusModalToggle = () => dispatch(statusToggle());
-  const { layoutURL } = useContext(CustomizerContext);
-  const [submit, setSubmit] = useState(false);
+  const [degreeName, setDegreeName] = useState("");
   const [stateStatus, setStateStatus] = useState('ACTIVE');
+  const [submit, setSubmit] = useState(false);
   const [formVar, setFormVar] = useState({
-
+    keyword: '',
     limit: 10,
     offset: 0,
     currentPage: 1,
     status: 'ACTIVE',
     modalTitle: null,
     editState: false,
-    faqsId: null,
-    faqStatus: 'ACTIVE',
-    question: '',
-    answer: '',
-    faqFor: 'HOME',
+    cityId: null,
+    degreeId: null,
+    startDate: moment().subtract(15, 'days').format('YYYY-MM-DD'),
+    endDate: moment().format('YYYY-MM-DD'),
   });
 
   useEffect(() => {
-    dispatch(getFaqs(formVar.limit, formVar.offset, formVar.status, formVar.keyword))
+    dispatch(getCategory(formVar.limit, formVar.offset, formVar.status, formVar.keyword))
   }, []);
 
-
-  const searchState = (e) => {
-    setFormVar((prevFormVar) => ({ ...prevFormVar, keyword: e.target.value }))
-    dispatch(getFaqs(formVar.limit, formVar.offset, formVar.status, e.target.value))
-  }
   const pageChange = (page) => {
-    console.log(page);
     const offset = formVar.limit * (page - 1)
     setFormVar((prevFormVar) => ({
       ...prevFormVar,
       currentPage: page,
       offset: offset
     }))
-    dispatch(getFaqs(formVar.limit, offset, formVar.status, formVar.keyword))
+
+    dispatch(getCategory(formVar.limit, offset, formVar.status, formVar.keyword))
   };
+  const searchState = (e) => {
+    setFormVar((prevFormVar) => ({ ...prevFormVar, keyword: e.target.value }))
+    dispatch(getCategory(formVar.limit, formVar.offset, formVar.status, e.target.value))
+  }
+
   const handleInputChange = (e) => {
     setFormVar((prevFormVar) => ({ ...prevFormVar, status: e.target.value }))
-    dispatch(getFaqs(formVar.limit, formVar.offset, e.target.value, formVar.keyword))
+    dispatch(getCategory(formVar.limit, formVar.offset, e.target.value, formVar.keyword))
   };
   const EditToggleModal = (data) => {
     dispatch(isOpenModal(true))
     setFormVar((prevFormVar) => ({
       ...prevFormVar,
       editState: true,
-      faqsId: data.id,
-      faqStatus: data.status,
-      question: data.question,
-      answer: data.answer,
-      faqFor: data.faqFor,
-      modalTitle: 'Edit FAQ'
+      degreeId: data.id,
+      modalTitle: 'Edit Category'
     }))
+    setDegreeName(data.name)
   }
   const AddToggleModal = () => {
     dispatch(isOpenModal(true))
     setFormVar((prevFormVar) => ({
       ...prevFormVar,
       editState: false,
-      modalTitle: 'Add FAQ',
-      question: '',
-      answer: '',
+      modalTitle: 'Add Category',
     }))
+    setDegreeName('')
+  }
+  const onValueChange = (event) => {
+    setStateStatus(event.target.value)
   }
   const statusToggleModal = (data) => {
     dispatch(isOpenStatusModal(true))
     setStateStatus(data.status)
     setFormVar((prevFormVar) => ({
       ...prevFormVar,
-      faqsId: data.id,
+      degreeId: data.id,
     }))
-  }
-  const onValueChange = (event) => {
-    setStateStatus(event.target.value)
-  }
-  const submitStatus = () => {
-    dispatch(statusUpdateFaqStatus({ id: formVar.faqsId, status: stateStatus }))
-  }
-
-  const submitDegree = () => {
-    if (formVar.editState) {
-      if (answerValid()) {
-        setSubmit(true)
-        return null
-      }
-      setSubmit(false)
-      dispatch(updateFaqs({ id: formVar.faqsId, answer: formVar.answer }))
-    } else {
-      if (questionValid()) {
-        setSubmit(true)
-        return null
-      }
-      setSubmit(false)
-      dispatch(addFaqs({ question: formVar.question }))
-    }
-  }
-
-
-  const questionValid = () => {
-    if (!formVar.question) {
-      return "question name is required";
-    }
-  }
-
-  const answerValid = () => {
-    if (!formVar.answer) {
-      return "Answer is required";
-    }
   }
   const BannerDelete = (data) => {
     SweetAlert.fire({
@@ -138,9 +99,43 @@ const FaqsTable = () => {
     })
       .then((result) => {
         if (result.value) {
-          dispatch(statusDeleteFaq(data.id, 'DELETED'))
+          console.log(data);
+          dispatch(statusDeleteCategoryStatus(data.id, 'DELETED'))
+
         }
       });
+  }
+  const submitCategory = () => {
+    if (degreeValid()) {
+      setSubmit(true)
+      return null
+    }
+    setSubmit(false)
+    if (formVar.editState) {
+      dispatch(updatecategoryData({ id: formVar.degreeId, name: degreeName }))
+    } else {
+      dispatch(addCategoryData(degreeName))
+    }
+  }
+  const submitStatus = () => {
+    dispatch(statusUpdateCategory({ id: formVar.degreeId, status: stateStatus }))
+  }
+
+  const degreeValid = () => {
+    if (!degreeName) {
+      return "Category name is required";
+    }
+  }
+
+  const handleDateChange = (e) => {
+    setFormVar((prevFormVar) => ({ ...prevFormVar, startDate: e.target.value }));
+    // dispatch(fetchlead(formVar.limit, formVar.offset, formVar.status, formVar.keyword, e.target.value, formVar.endDate))
+
+  }
+  const handleDateendChange = (e) => {
+    setFormVar((prevFormVar) => ({ ...prevFormVar, endDate: e.target.value }))
+    // dispatch(fetchlead(formVar.limit, formVar.offset, formVar.status, formVar.keyword, formVar.startDate, e.target.value))
+
   }
   return (
     <Fragment>
@@ -148,47 +143,51 @@ const FaqsTable = () => {
         <Card>
           <CardHeader>
             <Row>
-              <Col md="5">
-                <Input className="form-control" placeholder='Serch..' type="text" id="yourInputId"
-                  value={formVar.keyword} onChange={(e) => searchState(e)}
-                />
+              <Col md="3">
+                <Label className="col-form-label" for="recipient-name">From</Label>
               </Col>
-              <Col md="4">
-                {/* <Nav tabs className="border-tab"> */}
-                <Input className="form-control form-control-inverse btn-square" name="select" type="select"
-                  value={formVar.status} onChange={handleInputChange}>
-                  <option value='ACTIVE'>ACTIVE</option>
-                  <option value='DEACTIVE'>DEACTIVE</option>
-                  <option value='PENDING'>PENDING</option>
-                </Input>
-                {/* </Nav> */}
-              </Col>
-              <Col md="3" className='d-flex justify-content-end align-items-center'>
-                <div className="text-end border-2">
-                  <Btn attrBtn={{ color: 'info-gradien', size: 'sm', onClick: AddToggleModal }}>
-                    Add FAQ
-                  </Btn>
-                </div>
+              <Col md="3">
+                <Label className="col-form-label" for="recipient-name">To</Label>
               </Col>
             </Row>
+            <Row>
+              <Col md="3">
+                <Input className="form-control form-control-inverse btn-square" max={moment().format('YYYY-MM-DD')} name="select" type="DATE"
+                  value={formVar.startDate} onChange={handleDateChange}>
+                </Input>
+              </Col>
+              <Col md="3">
+                <Input className="form-control form-control-inverse btn-square" max={moment().format('YYYY-MM-DD')} name="select" type="DATE"
+                  value={formVar.endDate} onChange={handleDateendChange}>
+                </Input>
+              </Col>
+              <Col md="3" className='d-flex justify-content-end align-items-center'>
+              <Input className="form-control form-control-inverse btn-square" name="select" type="select"
+                  value={formVar.status} onChange={handleInputChange}>
+                  <option value='ACTIVE'>ACTIVE</option>
+                  <option value='DELETED'>DELETED</option>
+                  <option value='PENDING'>PENDING</option>
+                </Input>
+              </Col>
+            </Row>
+
+
           </CardHeader>
           <div className='table-responsive'>
             <Table hover={true} className='table-border-horizontal table-light'>
               <thead>
                 <tr>
                   <th scope='col'>Sl.No</th>
-                  <th scope='col'>Question</th>
-                  <th scope='col'>Answer</th>
+                  <th scope='col'>Name</th>
                   <th scope='col'>Status</th>
                   <th scope='col'>Action</th>
                 </tr>
               </thead>
               <tbody>
-                {storeVar.faqsData?.map((item, index) => (
+                {storeVar?.categoryData?.map((item, index) => (
                   <tr key={item.id}>
                     <th scope='row'>{index + 1}</th>
-                    <td>{item.question} </td>
-                    <td>{item.answer}</td>
+                    <td>{item.name}</td>
                     <td>
                       {
                         item.status === 'ACTIVE' && <>
@@ -246,29 +245,22 @@ const FaqsTable = () => {
           </div>
         </Card>
         {
-          storeVar.faqsData.length > 0 &&
-          <Pagination currentPage={formVar.currentPage} totalItem={storeVar.totalFaq}
+          storeVar.totalDegree > 0 &&
+          <Pagination currentPage={formVar.currentPage} totalItem={storeVar.totalDegree}
             itemsPerPage={formVar.limit} showEllipsisAfter={true} visiblePageCount={3} onPageChange={pageChange} />
         }
       </Col>
       <CommonModal isOpen={storeVar.isOpenModal} title={formVar.modalTitle} toggler={toggle} >
         <Form>
           <FormGroup>
-            {!formVar.editState && <>
-              <Label className="col-form-label" for="recipient-name">Question</Label>
-              <Input className="form-control" type="text" placeholder='Enter Question' onChange={(e) => setFormVar((prevFormVar) => ({ ...prevFormVar, question: e.target.value }))} value={formVar.question} />
-              {submit && questionValid() ? <span className='d-block font-danger'>{questionValid()}</span> : ""}
-            </>}
-            {formVar.editState && <>
-              <Label className="col-form-label" for="recipient-name">Answer</Label>
-              <textarea className='form-control' name='description' rows='3' onChange={(e) => setFormVar((prevFormVar) => ({ ...prevFormVar, answer: e.target.value }))} value={formVar.answer} />
-              {submit && answerValid() ? <span className='d-block font-danger'>{answerValid()}</span> : ""}
-            </>}
+            <Label className="col-form-label" for="recipient-name">Name</Label>
+            <Input className="form-control" type="text" placeholder='Enter Category Name' onChange={(e) => setDegreeName(e.target.value)} value={degreeName} />
+            {submit && degreeValid() ? <span className='d-block font-danger'>{degreeValid()}</span> : ""}
           </FormGroup>
         </Form>
         <ModalFooter>
           <Btn attrBtn={{ color: 'secondary', onClick: toggle }} >Close</Btn>
-          <Btn attrBtn={{ color: 'primary', onClick: submitDegree }}>Save Changes</Btn>
+          <Btn attrBtn={{ color: 'primary', onClick: submitCategory }}>Save Changes</Btn>
         </ModalFooter>
       </CommonModal>
       <CommonModal isOpen={storeVar.isStatusOpenModal} title={'Status'} toggler={statusModalToggle} >
@@ -303,4 +295,4 @@ const FaqsTable = () => {
   );
 };
 
-export default FaqsTable;
+export default PaymentsTable;

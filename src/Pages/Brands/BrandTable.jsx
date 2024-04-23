@@ -224,7 +224,7 @@ const BrandTable = () => {
                     <td>{item.name}</td>
                     
                     <td className={`w-25 ${item.image ? 'with-image' : 'no-image'}`}>
-                      {item.image && <img className='w-100 h-5-r' src={item.image} alt="" />}
+                      {item.image && <img className='w-80 h-5-r' src={item.image} alt="" />}
                       {!item.image && <img className='w-75 h-5-r' src={NoImage} alt="" />}
                     </td>
                     <td>

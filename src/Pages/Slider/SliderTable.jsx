@@ -2,21 +2,20 @@ import React, { Fragment, useEffect, useState, useContext } from 'react';
 import { Col, Card, CardHeader, Table, Form, FormGroup, Label, Input, ModalFooter, Row } from 'reactstrap';
 import { Btn } from '../../AbstractElements';
 import SweetAlert from 'sweetalert2';
-import { CheckCircle, XCircle, Trash2, FileText, AlignJustify } from "react-feather"
+import { CheckCircle, XCircle, Trash2, FileText, Edit } from "react-feather"
 import { useDispatch, useSelector } from 'react-redux';
 import CommonModal from '../../Components/Modals/modal';
 import { useNavigate } from "react-router-dom";
 import Dropzone from 'react-dropzone-uploader';
-import CustomizerContext from '../../_helper/Customizer';
-import { addSlider, deleteSlider, getSlider, statusUpdateSlider, isOpenStatusModal, statusToggle, ModalToggle, isOpenModal } from '../../store/sliderSlice';
+import { addSlider, deleteSlider, getSlider, statusUpdateSlider, isOpenStatusModal, statusToggle, ModalToggle, ImagestatusToggle  , isOpenModal, isImageOpenModal, updateType } from '../../store/sliderSlice';
 
 const SliderTable = () => {
   const storeVar = useSelector(state => state.slider)
   const dispatch = useDispatch();
   const history = useNavigate();
   const toggle = () => dispatch(ModalToggle());
+  const Imagetoggle = () => dispatch(ImagestatusToggle());
   const statusModalToggle = () => dispatch(statusToggle());
-  const { layoutURL } = useContext(CustomizerContext);
   const [submit, setSubmit] = useState(false);
   const [formVar, setFormVar] = useState({
     keyword: '',
@@ -27,23 +26,16 @@ const SliderTable = () => {
     editState: false,
     bannerId: null,
     bannerStatus: 'ACTIVE',
-    question: '',
-    answer: '',
-    faqFor: 'HOME',
     bannerFile: null,
     bannerImage: null,
     bannerImageURL: null,
+    bannerType: 'TOP',
   });
 
   useEffect(() => {
     dispatch(getSlider(formVar.limit, formVar.offset, formVar.status, formVar.keyword))
   }, []);
 
-
-  const searchState = (e) => {
-    setFormVar((prevFormVar) => ({ ...prevFormVar, keyword: e.target.value }))
-    dispatch(getSlider(formVar.limit, formVar.offset, formVar.status, e.target.value))
-  }
 
   const handleInputChange = (e) => {
     setFormVar((prevFormVar) => ({ ...prevFormVar, status: e.target.value }))
@@ -59,11 +51,12 @@ const SliderTable = () => {
     }))
   }
   const AddToggleModal = () => {
-    dispatch(isOpenModal(true))
+    dispatch(isImageOpenModal(true))
     setFormVar((prevFormVar) => ({
       ...prevFormVar,
       editState: false,
       bannerImage: null,
+      bannerImageURL: null,
       modalTitle: 'Add Slider',
     }))
   }
@@ -101,6 +94,10 @@ const SliderTable = () => {
   const submitStatus = () => {
     dispatch(statusUpdateSlider({ id: formVar.bannerId, status: formVar.bannerStatus }))
   }
+
+  const submitType = () => {
+    dispatch(updateType(formVar.id, formVar.bannerType))
+  }
   // called every time a file's `status` changes
   const handleChangeStatus = ({ meta, file }, status) => {
     if (status === 'done') {
@@ -130,9 +127,14 @@ const SliderTable = () => {
       return "Files is required";
     }
   }
-
-  const navigate = (id) => {
-    history(`${process.env.PUBLIC_URL}/slider-specialization/` + layoutURL + '?id=' + id)
+  const EditToggleModal = (data) => {
+    dispatch(isOpenModal(true))
+    setFormVar((prevFormVar) => ({
+      ...prevFormVar,
+      editState: true,
+      id: data.id,
+      modalTitle: 'Edit Type'
+    }))
   }
   return (
     <Fragment>
@@ -141,20 +143,13 @@ const SliderTable = () => {
           <CardHeader>
             <Row>
             
-              {/* <Col md="5">
-                <Input className="form-control" placeholder='Serch..' type="text" id="yourInputId"
-                  value={formVar.keyword} onChange={(e) => searchState(e)}
-                />
-              </Col> */}
               <Col md="5 ">
-                {/* <Nav tabs className="border-tab"> */}
                 <Input className="form-control form-control-inverse btn-square" name="select" type="select"
                   value={formVar.status} onChange={handleInputChange}>
                   <option value='ACTIVE'>ACTIVE</option>
                   <option value='DEACTIVE'>DEACTIVE</option>
                   <option value='PENDING'>PENDING</option>
                 </Input>
-                {/* </Nav> */}
               </Col>
               <Col md="4">
               </Col>
@@ -197,6 +192,10 @@ const SliderTable = () => {
                     </td>
                     <td>
                       <div className='d-flex gap-2'>
+                      <div className='cursor-pointer bg-light-primary font-primary action-icon'>
+                          <Edit onClick={(e) => EditToggleModal(item)} />
+                          <div className="tooltipCustom">Change Type</div>
+                        </div>
                         <div className='cursor-pointer action-icon'>
                           <FileText onClick={(e) => statusToggleModal(item)} />
                           <div className="tooltipCustom">Status Update</div>
@@ -205,7 +204,6 @@ const SliderTable = () => {
                           <Trash2 onClick={(e) => SliderDelete(item)} />
                           <div className="tooltipCustom">Delete</div>
                         </div>
-
                       </div>
                     </td>
                   </tr>
@@ -215,7 +213,24 @@ const SliderTable = () => {
           </div>
         </Card>
       </Col>
-      <CommonModal isOpen={storeVar.isOpenModal} title={formVar.modalTitle} toggler={toggle} >
+      <CommonModal isOpen={storeVar.isOpenModal} title={formVar.modalTitle} toggler={toggle}>
+        <Form>
+          <FormGroup>
+            <Label className="col-form-label" for="recipient-name">Slider Type</Label>
+            <Input className="form-control form-control-inverse btn-square" name="select" type="select"
+                  value={formVar.bannerType} onChange={(e) => setFormVar((prevFormVar) => ({ ...prevFormVar, bannerType: e.target.value }))}>
+                  <option value='TOP'>TOP</option>
+                  <option value='BOTTOM'>BOTTOM</option>
+                </Input>   
+       
+          </FormGroup>
+        </Form>
+        <ModalFooter>
+          <Btn attrBtn={{ color: 'secondary', onClick: toggle }} >Close</Btn>
+          <Btn attrBtn={{ color: 'primary', onClick: submitType }}>Save Changes</Btn>
+        </ModalFooter>
+      </CommonModal>
+      <CommonModal isOpen={storeVar.isImageOpenModal} title={formVar.modalTitle} toggler={Imagetoggle} >
         <Form>
           {
             formVar.bannerImageURL && <>
@@ -244,7 +259,7 @@ const SliderTable = () => {
           </FormGroup>
         </Form>
         <ModalFooter>
-          <Btn attrBtn={{ color: 'secondary', onClick: toggle }} >Close</Btn>
+          <Btn attrBtn={{ color: 'secondary', onClick: Imagetoggle }} >Close</Btn>
           <Btn attrBtn={{ color: 'primary', onClick: submitSlider }}>Save Changes</Btn>
         </ModalFooter>
       </CommonModal>

@@ -101,11 +101,11 @@ g, path, circle, rect {
 .climacon_componentWrap_sunSpoke .climacon_component-stroke_sunSpoke {
   animation-name: scale;
   animation-direction: alternate;
-  animation-duration: $baseAnimationDuration / 4;
+  animation-duration: calc($baseAnimationDuration / 4);
 }
 
 .climacon_componentWrap_sunSpoke .climacon_component-stroke_sunSpoke:nth-child(even) {
-  animation-delay: $baseAnimationDuration / 4;
+  animation-delay: calc($baseAnimationDuration / 4);
 }
 
 /* MOON */

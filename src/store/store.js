@@ -28,7 +28,9 @@ import brandReducer from './brandsSlice';
 import couponReducer from './couponSlice';
 import blogReducer from './blogSlice';
 import productReducer from './productSlice';
-import productImageReducer from './productImageSlice'
+import productImageReducer from './productImageSlice';
+import paymentReducer from './paymentSlice';
+
 
 export const store = configureStore({
   reducer: {

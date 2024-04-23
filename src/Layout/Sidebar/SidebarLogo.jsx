@@ -19,11 +19,11 @@ const SidebarLogo = () => {
     <div className='logo-wrapper'>
       {layout1 !== 'compact-wrapper dark-sidebar' && layout1 !== 'compact-wrapper color-sidebar' && mixLayout ? (
         <Link to={`${process.env.PUBLIC_URL}/dashboard/social/${layoutURL}`}>
-          <Image attrImage={{ className: 'img-fluid d-inline', src: `${CubaIcon}`, alt: '' }} />
+          <Image attrImage={{ className: 'img-fluid d-inline logo-image-wrapper', src: `${CubaIcon}`, alt: '' }} />
         </Link>
       ) : (
         <Link to={`${process.env.PUBLIC_URL}/dashboard/social/${layoutURL}`}>
-          <Image attrImage={{ className: 'img-fluid d-inline', src: `${CubaIcon}`, alt: '' }} />
+          <Image attrImage={{ className: 'img-fluid d-inline logo-image-wrapper', src: `${CubaIcon}`, alt: '' }} />
           {/* <Image attrImage={{ className: 'img-fluid d-inline', src: `${require('../../assets/images/logo/zeocart_white.png')}`, alt: '' }} /> */}
         </Link>
       )}

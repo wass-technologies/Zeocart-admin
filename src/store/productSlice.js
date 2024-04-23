@@ -16,6 +16,7 @@ const initialState = {
   error: '',
   totalProducts: '',
   isOpenModal: false,
+  isOpenBulkModal: false,
   isStatusOpenModal: false,
   isImageOpenModal: false,
 
@@ -41,8 +42,15 @@ export const productSlice = createSlice({
     isImageOpenModal(state, { payload }) {
       state.isImageOpenModal = payload
     },
+    isOpenBulkModal(state, { payload }) {
+      console.log(payload);
+      state.isOpenBulkModal = payload
+    },
     ModalToggle(state, { payload }) {
       state.isOpenModal = !state.isOpenModal
+    }, 
+    BulkModalToggle(state, { payload }) {
+      state.isOpenBulkModal = !state.isOpenBulkModal
     },
     isOpenStatusModal(state, { payload }) {
       state.isStatusOpenModal = payload
@@ -56,7 +64,7 @@ export const productSlice = createSlice({
   },
 });
 
-export const { setbrand, updateProductData, DeleteBrandsData, isOpenModal, isImageOpenModal, ModalToggle, setFaqsSpecializationData, isOpenStatusModal, statusToggle, ImagestatusToggle } = productSlice.actions;
+export const { setbrand, updateProductData, DeleteBrandsData, isOpenModal, isBulkOpenModal, isImageOpenModal, isOpenBulkModal, ModalToggle, BulkModalToggle, isOpenStatusModal, statusToggle, ImagestatusToggle } = productSlice.actions;
 export default productSlice.reducer;
 
 export function fetchProduct(limit, offset, status, categoryId, subCategoryId, keyword) {

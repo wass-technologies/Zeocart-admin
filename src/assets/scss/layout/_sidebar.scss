@@ -1260,9 +1260,22 @@
           transition: 0.3s;
           box-shadow: 0 0 21px 0 rgba($semi-dark, 0.1);
 
-          .logo-wrapper,
+          .logo-wrapper{
+            display: flex;
+            justify-content: start;
+            padding: 14px 30px;
+            box-shadow: -9px 0 20px rgba(89, 102, 122, 0.1);
+            object-fit: cover;
+            height: 100%;
+            width: 100%;
+            align-items: center;
+            .logo-image-wrapper{
+              height: 100%;
+              width: 60%;
+            }
+          }
           .logo-icon-wrapper {
-            padding: 0px 57px;
+            padding: 16px 30px;
             box-shadow: -9px 0 20px rgba($semi-dark, 0.1);
           }
 

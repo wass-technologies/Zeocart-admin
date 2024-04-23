@@ -117,8 +117,8 @@ export function addCoupon(payload) {
     try {
       await service.addCouponData(payload).then(
         async (response) => {
-          dispatch(setLoading(false))
           dispatch(ModalToggle())
+          dispatch(setLoading(false))
           successHandler('Added Successfully')
         }, (error) => {
           dispatch(setLoading(false))
@@ -175,11 +175,11 @@ export function DetailsUpdateAdvertisement(id, name, url,type, urltype,) {
 
 
 
-export function statusUpdateAdvertisement(payload) {
-  return async function statusUpdateAdvertisementThunk(dispatch) {
+export function statusUpdateCoupons(payload) {
+  return async function statusUpdateCouponsThunk(dispatch) {
     try {
       dispatch(setLoading(true))
-      await service.updateAdvertisementStatus(payload.id,payload.status).then(
+      await service.updateCouponsStatus(payload.id,payload.status).then(
         (response) => {
           dispatch(updateadvertisementData(response.data))
           dispatch(statusToggle())

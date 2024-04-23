@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import cubaimg from "../../assets/images/logo/digo360-icon-small.png"; 
+import cubaimg from "../../assets/images/logo/zeocart_small.png";
 import CustomizerContext from '../../_helper/Customizer';
 
 const SidebarIcon = () => {

@@ -90,7 +90,6 @@ const Blogs = () => {
       });
   }
   const ImageEditBannerModal = (data) => {
-    console.log(data);
     dispatch(isImageOpenModal(true))
     setFormVar((prevFormVar) => ({
       id: data.id,
@@ -290,18 +289,18 @@ const Blogs = () => {
                   <tr key={item.id}>
                     <th scope='row'>{index + 1}</th>
                     <td>{item.title}</td>
-                    <td>{item.shortDesc?.substring(0, 30)}.....</td>
-                    <td>{item.desc1?.substring(0, 30)}.....</td>
+                    <td dangerouslySetInnerHTML={{ __html: item.shortDesc?.substring(0, 30) }}></td>
+                    <td dangerouslySetInnerHTML={{ __html: item.desc1?.substring(0, 30) }}></td>
                     <td className='w-25'>
-                      {item.desc1Img ? <img className='w-100 h-5-r' src={item.desc1Img} alt="" /> : <img className='w-75 h-5-r' src={NoImage} alt="" />}
+                      {item.desc1Img ? <img className='w-10-r h-5-r' src={item.desc1Img} alt="" /> : <img className='w-10-r h-5-r' src={NoImage} alt="" />}
 
                     </td>
                     <td className='w-25'>
-                      {item.desc2Img ? <img className='w-100 h-5-r' src={item.desc2Img} alt="" /> : <img className='w-75 h-5-r' src={NoImage} alt="" />}
+                      {item.desc2Img ? <img className='w-10-r h-5-r' src={item.desc2Img} alt="" /> : <img className='w-10-r h-5-r' src={NoImage} alt="" />}
 
                     </td>
                     <td className={`w-25 ${item.desc3Img ? 'with-image' : 'no-image'}`}>
-                      {item.desc3Img ? <img className='w-100 h-5-r' src={item.desc3Img} alt="" /> : <img className='w-75 h-5-r' src={NoImage} alt="" />}
+                      {item.desc3Img ? <img className='w-10-r h-5-r' src={item.desc3Img} alt="" /> : <img className='w-10-r h-5-r' src={NoImage} alt="" />}
 
                     </td>
 
@@ -411,7 +410,7 @@ const Blogs = () => {
 
         </ModalFooter>
       </CommonModal>
-      <CommonModal isOpen={storeVar.isOpenModal} title={formVar.modalTitle} toggler={toggle} >
+      <CommonModal isOpen={storeVar.isOpenModal} title={formVar.modalTitle} toggler={toggle} size={"xl"}>
         <Form>
           <FormGroup>
             <Label className="col-form-label" for="recipient-name">Title</Label>

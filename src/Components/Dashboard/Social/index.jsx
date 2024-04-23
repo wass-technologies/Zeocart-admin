@@ -37,33 +37,28 @@ const Social = () => {
         <Row>
           <Col xxl='12' xl='12' >
             <Row>
-              <Col md='4' sm='6' >
+              <Col md='3' sm='6' >
                 <SocialWidget data={dashboard?.dashboardData?.categoryCount} increment={dashboard?.dashboardData?.categoryOneMonthCount} title={'Total Category'} />
               </Col>
-              <Col md='4' sm='6' >
+              <Col md='3' sm='6' >
                 <SocialWidget data={dashboard?.dashboardData?.productCount} increment={dashboard?.dashboardData?.productOneMonthCount} title={'Total Product'} />
               </Col>
-              <Col md='4' sm='6' >
+              <Col md='3' sm='6' >
                 <SocialWidget data={dashboard?.dashboardData?.orderDeliveredCount} increment={dashboard?.dashboardData?.orderDeliveredOneMonthCount} title={'Orders Delivered'} />
               </Col>
-              <Col md='4' sm='6' >
+              <Col md='3' sm='6' >
                 <SocialWidget data={dashboard?.dashboardData?.orderDispatchCount} increment={dashboard?.dashboardData?.orderDispatchOneMonthCount} title={'Orders Dispatched'} />
               </Col>
-              <Col md='4' sm='6' >
+              <Col md='3' sm='6' >
                 <SocialWidget data={dashboard?.dashboardData?.orderReturnCount} increment={dashboard?.dashboardData?.orderReturnOneMonthCount} title={'Orders Returned'} />
               </Col>
-              <Col md='4' sm='6' >
+              <Col md='3' sm='6' >
                 <SocialWidget data={dashboard?.dashboardData?.totalOrderCount} increment={dashboard?.dashboardData?.totalOrderOneMonthCount} title={'Total Orders'} />
               </Col>
-              <Col md='4'>
-                <MonthlyProfits />
+              <Col md='3'>
+                {/* <MonthlyProfits /> */}
               </Col>
-              <Col md='4'>
-                <MonthlyProfits />
-              </Col>
-              <Col md='4'>
-                <MonthlyProfits />
-              </Col>
+         
               
             </Row>
           </Col>

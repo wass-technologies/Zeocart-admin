@@ -113,6 +113,10 @@ async function updateAdvertisementDetails(id, name, url, type, urlType) {
     headers: await authHeader(),
   });
 }
+async function updateCouponsStatus(id,status){
+  return await axios.put(addvertiseURL+id,{status: status},{
+    headers :await authHeader(),
+  })}
 
 // category
 
@@ -177,6 +181,11 @@ async function statusUpdateSubCAtegory(id, status) {
     headers: await authHeader()
   })
 }
+async function updateSubCategoryImage(id, file){
+ 
+  return await axios.put(subcategoryURL +'/'+id,{file},{
+  headers :await authHeader("FormData")
+})}
 
 // brands
 
@@ -209,8 +218,8 @@ async function statusUpdateBrands(id, status) {
   })
 }
 
-async function ordersdata(limit, offset, status, keyword) {
-  return await axios.get(ordersURL+ '/list?limit='+limit+'&offset='+offset+'&status='+status, {
+async function ordersdata(limit, offset, status, keyword, paymentStatus, paymentMode) {
+  return await axios.get(ordersURL+ '/list?limit='+limit+'&offset='+offset+'&status='+status+ '&keyword='+keyword+ '&paymentStatus='+paymentStatus+ '&paymentMode='+paymentMode, {
     headers: await authHeader()
   })
 }
@@ -275,7 +284,6 @@ async function updateBlogsdata(id,title, shortDesc, desc1){
   })
 }
 async function statusUpdateBlogs(id,status){
-
   return await axios.put(blogsUrl+id,{status: status},{
     headers :await authHeader(),
   })}
@@ -347,8 +355,8 @@ async function deleteSlider(id) {
     headers: await authHeader(),
   });
 }
-async function statusUpdateSlider(id, status) {
-  return await axios.put(sliderURL + '/' + id, { status }, {
+async function statusUpdateSlider(id, data) {
+  return await axios.put(sliderURL + '/' + id, data, {
     headers: await authHeader(),
   });
 }
@@ -443,6 +451,8 @@ export const service = {
   addAdvertisement,
   addAdvertisementImage,
   updateAdvertisementDetails,
+  updateCouponsStatus,
+
 
   getSettings,
   addSettingsBanner1,
@@ -479,7 +489,7 @@ export const service = {
   addSubCategory,
   updatesubCategory,
   statusUpdateSubCAtegory,
-  
+  updateSubCategoryImage,
 
   brandData,
   createBrands,

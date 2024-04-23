@@ -35,10 +35,12 @@ const Orders = () => {
     brandName: '',
     bannerFile: null,
     bannerImageURL: null,
+    paymentStatus: 'ALL',
+    paymentMode: 'All'
   });
 
   useEffect(() => {
-    dispatch(fetchorders(formVar.limit, formVar.offset, formVar.status, formVar.keyword,));
+    dispatch(fetchorders(formVar.limit, formVar.offset, formVar.status, formVar.keyword, formVar.paymentStatus, formVar.paymentMode));
   }, []);
 
   const pageChange = (page) => {
@@ -85,6 +87,17 @@ const Orders = () => {
     setFormVar((prevFormVar) => ({ ...prevFormVar, status: e.target.value }))
     dispatch(fetchorders(formVar.limit, formVar.offset, e.target.value, formVar.keyword))
   };
+
+  const handlePaymentChange = (e) => {
+    setFormVar((prevFormVar) => ({ ...prevFormVar, paymentStatus: e.target.value }))
+    dispatch(fetchorders(formVar.limit, formVar.offset, e.target.value, formVar.keyword))
+  };
+
+  const handleDeliveryChange = (e) => {
+    setFormVar((prevFormVar) => ({ ...prevFormVar, paymentMode: e.target.value }))
+    dispatch(fetchorders(formVar.limit, formVar.offset, e.target.value, formVar.keyword))
+  };
+
   const EditToggleModal = (data) => {
     dispatch(isOpenModal(true))
     setFormVar((prevFormVar) => ({
@@ -181,35 +194,41 @@ const Orders = () => {
         <Card>
           <CardHeader>
             <Row>
-              <Col md="5">
+              <Col md="4">
                 <Input className="form-control" placeholder='Serch..' type="text" id="yourInputId"
                   value={formVar.keyword} onChange={(e) => searchState(e)}
                 />
               </Col>
-              <Col md="5">
-                {/* <Nav tabs className="border-tab"> */}
+              <Col md="4">
                 <Input className="form-control form-control-inverse btn-square" name="select" type="select"
                   value={formVar.status} onChange={handleInputChange}>
-                  <option value='CART'>CART</option>
                   <option value='DELETED'>DELETED</option>
                   <option value='ORDERED'>ORDERED</option>
                   <option value='DELIVERED'>DELIVERED</option>
                   <option value='DISPATCH'>DISPATCH</option>
                   <option value='RETURN'>RETURN</option>
-                  <option value='REPLACE'>REPLACE</option>
-
-            
+                  <option value='CANCELLED'>CANCELLED</option>
                 </Input>
-                {/* </Nav> */}
               </Col>
-              {/* <Col md="3" className='d-flex justify-content-end align-items-center'>
-
-                 <div className="text-end border-2">
-                  <Btn attrBtn={{ color: 'info-gradien', size: 'sm', onClick: AddToggleModal }}>
-                    Add Brands
-                  </Btn>
-                </div>
-              </Col> */}
+              <Col md="4">
+                <Input className="form-control form-control-inverse btn-square" name="select" type="select"
+                  value={formVar.paymentStatus} onChange={handlePaymentChange}>
+                  <option value='ALL'>ALL</option>
+                  <option value='PENDING'>PENDING</option>
+                  <option value='COMPLETED'>COMPLETED</option>
+                  <option value='CANCELLED'>CANCELLED</option>
+                  <option value='FAILED'>FAILED</option>
+                  <option value='REFUNDED'>REFUNDED</option>
+                </Input>
+              </Col>
+              <Col md="4">
+                <Input className="form-control form-control-inverse btn-square" name="select" type="select"
+                  value={formVar.paymentMode} onChange={handleDeliveryChange}>
+                  <option value='All'>All</option>
+                  <option value='Phone Pe'>Phone Pe</option>
+                  <option value='COD'>COD</option>
+                </Input>
+              </Col>
             </Row>
 
           </CardHeader>

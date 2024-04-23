@@ -57,10 +57,10 @@ export const ordersSlice = createSlice({
 export const { setbrand, updateBrandsData, DeleteBrandsData, isOpenModal, isImageOpenModal, ModalToggle, setFaqsSpecializationData, isOpenStatusModal, statusToggle, ImagestatusToggle } = ordersSlice.actions;
 export default ordersSlice.reducer;
 
-export function fetchorders(limit, offset, status, keyword) {
+export function fetchorders(limit, offset, status, keyword, paymentStatus, paymentMode) {
   return async function fetchordersThunk(dispatch, getState) {
     try {
-      await service.ordersdata(limit, offset, status, keyword).then(
+      await service.ordersdata(limit, offset, status, keyword, paymentStatus, paymentMode).then(
         (response) => {
           console.log(response);
           dispatch(setbrand(response.data.result));

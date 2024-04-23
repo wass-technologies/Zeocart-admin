@@ -10,7 +10,6 @@ import BannerHome from "../Pages/BannerHome";
 import BannerGlass from "../Pages/BannerGlass";
 import BannerCover from "../Pages/BannerCover";
 import Slider from "../Pages/Slider";
-import SliderSpecialization from "../Pages/Slider/SliderSpecialization";
 import Page from "../Pages/Page";
 import PageEdit from "../Pages/PageEdit";
 import Category from "../Pages/Category/";
@@ -20,10 +19,12 @@ import Orders from "../Pages/Orders";
 import ErrorPage4 from '../Components/Pages/ErrorPages/ErrorPage404';
 import Coupons from "../Pages/Coupons";
 import Staff from "../Pages/Staff";
-import Advertisement from "../Pages/Advertisements/Advertisement";
+import Advertisement from "../Pages/Advertisements";
 import Blogs from "../Pages/Blogs/Blogs";
 import Products from "../Pages/Products/Products";
 import ProductBanner from "../Pages/Products/ProductBanners/AddProductBanners";
+import Payments from "../Pages/Payments";
+
 
 export const routes = [
   { path: `${process.env.PUBLIC_URL}/dashboard/social/:layout`, Component: <Social /> },
@@ -55,17 +56,18 @@ export const routes = [
    
    // Category
    { path: `${process.env.PUBLIC_URL}/category/:layout`, Component: <Category /> },
-   { path: `${process.env.PUBLIC_URL}/subcategory/:layout`, Component: <SubCategory /> },
+   { path: `${process.env.PUBLIC_URL}/subcategories/:layout`, Component: <SubCategory /> },
    { path: `${process.env.PUBLIC_URL}/orders/:layout`, Component: <Orders /> },
+   { path: `${process.env.PUBLIC_URL}/payments/:layout`, Component: <Payments /> },
    
    // Faq
   { path: `${process.env.PUBLIC_URL}/faqs/:layout`, Component: <Faqs /> },
   { path: `${process.env.PUBLIC_URL}/faq-specialization/:layout`, Component: <FaqsSpecialization /> },
 
   //Banner
-  { path: `${process.env.PUBLIC_URL}/banner-home/:layout`, Component: <BannerHome /> },
-  { path: `${process.env.PUBLIC_URL}/banner-cover/:layout`, Component: <BannerCover /> },
-  { path: `${process.env.PUBLIC_URL}/banner-glass/:layout`, Component: <BannerGlass /> },
+  { path: `${process.env.PUBLIC_URL}/homepage/:layout`, Component: <BannerHome /> },
+  { path: `${process.env.PUBLIC_URL}/phonecover/:layout`, Component: <BannerCover /> },
+  { path: `${process.env.PUBLIC_URL}/phoneglass/:layout`, Component: <BannerGlass /> },
 
    //Advertisement
    { path: `${process.env.PUBLIC_URL}/advertisement/:layout`, Component: <Advertisement /> },
@@ -75,7 +77,6 @@ export const routes = [
   //Slider 
 
   { path: `${process.env.PUBLIC_URL}/slider/:layout`, Component: <Slider /> },
-  { path: `${process.env.PUBLIC_URL}/slider-specialization/:layout`, Component: <SliderSpecialization /> },
 
 
   { path: `${process.env.PUBLIC_URL}/pages/:layout`, Component: <Page /> },

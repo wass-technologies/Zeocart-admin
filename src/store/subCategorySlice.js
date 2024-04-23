@@ -15,6 +15,7 @@ const initialState = {
   Count:0,
   isOpenModal: false,
   isStatusOpenModal:false,
+  isImageOpenModal: false,
 }
 
 export const subCategorySlice = createSlice({
@@ -40,13 +41,19 @@ export const subCategorySlice = createSlice({
     isOpenStatusModal(state, { payload }) {
       state.isStatusOpenModal = payload
     },
+    isImageOpenModal(state, { payload }) {
+      state.isImageOpenModal = payload
+    },
     statusToggle(state, { payload }) {
       state.isStatusOpenModal = !state.isStatusOpenModal
-    }
+    },
+    ImagestatusToggle(state, { payload }) {
+      state.isImageOpenModal = !state.isImageOpenModal
+    },
   }
 })
 
-export const { setsubCategoryData, isOpenModal, ModalToggle,isOpenStatusModal,statusToggle, updatesubCategoryData } = subCategorySlice.actions;
+export const { setsubCategoryData, isOpenModal, ModalToggle, isOpenStatusModal,statusToggle, updatesubCategoryData, isImageOpenModal } = subCategorySlice.actions;
 
 export default subCategorySlice.reducer;
 
@@ -144,6 +151,27 @@ export function updatesubCategory(payload) {
         }, (error) => {
           dispatch(setLoading(false))
           // errorHandler(error.response)
+        }
+      );
+    } catch (err) {
+
+    }
+  }
+}
+
+export function updateImageSubCategory(id, file) {
+  return async function updateImageSubCategoryThunk(dispatch) {
+    try {
+      dispatch(setLoading(true))
+      dispatch(isImageOpenModal())
+      await service.updateSubCategoryImage(id, file).then(
+        (response) => {
+          dispatch(updatesubCategoryData(response.data))
+          dispatch(setLoading(false))
+          successHandler('Updated Successfully')
+        }, (error) => {
+          dispatch(setLoading(false))
+          errorHandler(error.response)
         }
       );
     } catch (err) {

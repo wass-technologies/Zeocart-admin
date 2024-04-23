@@ -7,7 +7,7 @@ import CommonModal from '../../Components/Modals/modal';
 import Dropzone from 'react-dropzone-uploader';
 import { getCategory } from '../../store/categorySlice';
 import { getsubCategory } from '../../store/subCategorySlice';
-import { fetchProduct, addProduct, updateBrand, statusToggle, UpdateProductStatus, statusDeleteBrandStatus, isOpenModal, ModalToggle, isOpenStatusModal, isImageOpenModal, ImagestatusToggle, updateImageBrands } from '../../store/productSlice';
+import { fetchProduct, addProduct, BulkModalToggle, statusToggle, UpdateProductStatus, statusDeleteBrandStatus, isOpenModal, isOpenBulkModal, ModalToggle, isOpenStatusModal, isImageOpenModal, ImagestatusToggle, updateImageBrands } from '../../store/productSlice';
 import { fetchbrand } from '../../store/brandsSlice';
 import CustomizerContext from '../../_helper/Customizer';
 import Pagination from '../../Components/Pagination/Pagination';
@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 
 const ProductTable = () => {
   const storeVar = useSelector(state => state.products)
+  console.log(storeVar);
   const catVar = useSelector(state => state.category)
   const subcatVar = useSelector(state => state.subcategory)
   const brandsVar = useSelector(state => state.brands)
@@ -25,7 +26,7 @@ const ProductTable = () => {
   const history = useNavigate();
   const { layoutURL } = useContext(CustomizerContext);
   const toggle = () => dispatch(ModalToggle());
-  const Imagetoggle = () => dispatch(ImagestatusToggle());
+  const bulkToggle = () => dispatch(BulkModalToggle());
   const statusModalToggle = () => dispatch(statusToggle());
   const [selectedBrandOption, setselectedBrandOption] = useState("");
   const [selectedCatOption, setselectedCatOption] = useState("");
@@ -243,6 +244,10 @@ const ProductTable = () => {
       modalTitle: 'Add Products',
     }))
   } 
+
+  const AddBulkUploadModal = () => {
+    dispatch(isOpenBulkModal(true))
+  }
   const navigate = (id) => {
     history(`${process.env.PUBLIC_URL}/product-image/` + layoutURL + '?id=' + id)
   }
@@ -560,7 +565,14 @@ const ProductTable = () => {
                 </Input>
                 {/* </Nav> */}
               </Col>
-              <Col md="3" className='d-flex justify-content-end align-items-center'>
+              <Col md="1" className='d-flex justify-content-end align-items-center'>
+                <div className="text-end border-2">
+                  <Btn attrBtn={{ color: 'info-gradien', size: 'sm', onClick: AddBulkUploadModal }}>
+                    Bulk Upload
+                  </Btn>
+                </div>
+              </Col>
+              <Col md="2" className='d-flex justify-content-end align-items-center'>
 
                 <div className="text-end border-2">
                   <Btn attrBtn={{ color: 'info-gradien', size: 'sm', onClick: AddToggleModal }}>
@@ -670,24 +682,18 @@ const ProductTable = () => {
             itemsPerPage={formVar.limit} showEllipsisAfter={true} visiblePageCount={3} onPageChange={pageChange} />
         }
       </Col>
-      <CommonModal isOpen={storeVar.isImageOpenModal} title={formVar.modalTitle} toggler={Imagetoggle} >
+      <CommonModal isOpen={storeVar.isOpenBulkModal} title={"Upload Zip File"} toggler={bulkToggle} >
         <Form>
           <FormGroup>
-            {
-              formVar.bannerImageURL && <>
-                <div className='d-flex justify-content-center h-10-r'>
-                  <img className=' h-100' src={formVar.bannerImageURL} alt="" />
-                </div>
-              </>
-            }
-            <Label className="col-form-label" for="recipient-name">Image</Label>
+           
+            <Label className="col-form-label" for="recipient-name">Zip</Label>
             <Dropzone
               className='dropzone dz-clickable'
               onChangeStatus={handleChangeStatus}
               maxFiles={1}
               multiple={false}
-              // canCancel={false}
-              accept="image/*"
+              accept=".zip"
+
               inputContent='Drop A File'
               styles={{
                 dropzone: { width: '100%', height: 150 },
@@ -698,11 +704,11 @@ const ProductTable = () => {
           </FormGroup>
         </Form>
         <ModalFooter>
-          <Btn attrBtn={{ color: 'secondary', onClick: toggle }} >Close</Btn>
+          <Btn attrBtn={{ color: 'secondary', onClick: bulkToggle }} >Close</Btn>
           <Btn attrBtn={{ color: 'primary', onClick: submitImage }}>Save Changes</Btn>
         </ModalFooter>
       </CommonModal>
-      <CommonModal isOpen={storeVar.isOpenModal} title={formVar.modalTitle} toggler={toggle} >
+      <CommonModal isOpen={storeVar.isOpenModal} title={formVar.modalTitle} toggler={toggle} size={"xl"} >
         <Form>
           <FormGroup>
             <Row>
@@ -772,7 +778,7 @@ const ProductTable = () => {
               </Col>
               <Col>
                 <Label className="col-form-label" for="recipient-name">Discounted Price</Label>
-                <Input className="form-control" type="text" onInput={(e) => e.target.value = e.target.value.replace(/[^0-9]/g, "").replace(" ", "").slice(0, 6)} onChange={handleDiscountedPriceChange} value={formVar.discountedPrice} />
+                <Input className="form-control" type="text" onInput={(e) => e.target.value = e.target.value.replace(/[^0-9]/g, "").replace(" ", "").slice(0, 6)} onChange={handleDiscountedPriceChange} value={formVar.discountedPrice} disabled/>
               </Col>
             </Row>
             <Row>

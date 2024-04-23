@@ -1,14 +1,16 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Col, Card, CardHeader, Table, Form, FormGroup, Label, Input, ModalFooter, Row } from 'reactstrap';
 import { Btn } from '../../AbstractElements';
-import { CheckCircle, XCircle, Edit, FileText, Trash2 } from "react-feather"
+import { CheckCircle, XCircle, Edit, FileText, Trash2, Image } from "react-feather"
 import { useDispatch, useSelector } from 'react-redux';
 import CommonModal from '../../Components/Modals/modal';
 import { getCategory } from '../../store/categorySlice';
-import { getsubCategory, isOpenModal, ModalToggle, statusToggle, isOpenStatusModal, addSubCategory, updatesubCategory, deleteSubCategoryStatus, statusSubCatDegree } from '../../store/subCategorySlice';
+import { getsubCategory, isOpenModal, ModalToggle, statusToggle, isOpenStatusModal, addSubCategory, updatesubCategory, deleteSubCategoryStatus, statusSubCatDegree, isImageOpenModal, updateImageSubCategory } from '../../store/subCategorySlice';
 import Pagination from '../../Components/Pagination/Pagination';
 import SweetAlert from 'sweetalert2';
 import NoImage from '../../assets/images/noimage.png';
+import Dropzone from 'react-dropzone-uploader';
+
 
 const SubCategoryTable = () => {
   const catVar = useSelector(state => state.category)
@@ -16,6 +18,7 @@ const SubCategoryTable = () => {
   const dispatch = useDispatch();
   const toggle = () => dispatch(ModalToggle());
   const statusModalToggle = () => dispatch(statusToggle());
+  const Imagetoggle = () => dispatch(isImageOpenModal());
   const [stateStatus, setStateStatus] = useState('ACTIVE');
   const [submit, setSubmit] = useState(false);
   const [selectedOption, setSelectedOption] = useState('');
@@ -32,6 +35,8 @@ const SubCategoryTable = () => {
     addCatId: '',
     id: '',
     name: '',
+    bannerFile: '',
+    bannerImageURL: '',
   });
 
   useEffect(() => {
@@ -152,6 +157,55 @@ const SubCategoryTable = () => {
         }
       });
   }
+  const ImageEditBannerModal = (data) => {
+
+    dispatch(isImageOpenModal(true))
+    setFormVar((prevFormVar) => ({
+      ...prevFormVar,
+      id: data.id,
+      modalTitle: 'Update Logo',
+    }))
+  }
+
+  const submitImage = () => {
+    if (filesValid()) {
+      setSubmit(true)
+      return null
+    }
+    console.log(formVar);
+
+    setSubmit(false)
+    dispatch(updateImageSubCategory(formVar.id, formVar.bannerFile))
+  }
+
+  const filesValid = () => {
+    if (!formVar.bannerFile) {
+      return "Files is required";
+    }
+  }
+
+  const handleChangeStatus = ({ meta, file }, status) => {
+    if (status === 'done') {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setFormVar((prevFormVar) => ({
+          ...prevFormVar,
+          bannerImageURL: e.target.result,
+        }))
+      };
+      reader.readAsDataURL(file);
+      setFormVar((prevFormVar) => ({
+        ...prevFormVar,
+        bannerFile: file,
+      }))
+    } else if (status === "removed") {
+      setFormVar((prevFormVar) => ({
+        ...prevFormVar,
+        bannerFile: null,
+        bannerImageURL: null,
+      }))
+    }
+  };
   return (
     <Fragment>
       <Col sm='12'>
@@ -195,11 +249,6 @@ const SubCategoryTable = () => {
                 </div>
               </Col>
             </Row>
-            {/* <div className="text-end">
-              <Btn attrBtn={{ color: 'info-gradien', size: 'sm', active: false, disabled: false, outline: false  }}>
-                Add State
-              </Btn>
-            </div> */}
 
           </CardHeader>
           <div className='table-responsive'>
@@ -208,7 +257,7 @@ const SubCategoryTable = () => {
                 <tr>
                   <th scope='col'>Sl.No</th>
                   <th scope='col'>Name</th>
-                  <th scope='col'>Banner</th>
+                  <th scope='col'>Logo</th>
                   <th scope='col'>Status</th>
                   <th scope='col'>Action</th>
                 </tr>
@@ -219,8 +268,8 @@ const SubCategoryTable = () => {
                     <th scope='row'>{index + 1}</th>
                     <td>{item.name}</td>
                     <td className={`w-25 ${item.image ? 'with-image' : 'no-image'}`}>
-                      {item.image && <img className='w-100 h-5-r' src={item.image} alt="" />}
-                      {!item.image && <img className='w-75 h-5-r' src={NoImage} alt="" />}
+                      {item.image && <img className='w-10-r h-5-r' src={item.image} alt="" />}
+                      {!item.image && <img className='w-10-r h-5-r' src={NoImage} alt="" />}
                     </td>
                     <td>
                       {
@@ -254,6 +303,10 @@ const SubCategoryTable = () => {
                           <Edit onClick={(e) => EditToggleModal(item)} />
                           <div className="tooltipCustom">Edit</div>
                         </div>
+                        <div className='cursor-pointer font-success action-icon'>
+                          <Image onClick={(e) => ImageEditBannerModal(item)} />
+                          <div className="tooltipCustom">Update Logo</div>
+                        </div>
                         <div className='cursor-pointer action-icon'>
                           <FileText onClick={(e) => statusToggleModal(item)} />
                           <div className="tooltipCustom">Status Update</div>
@@ -280,7 +333,7 @@ const SubCategoryTable = () => {
         <Form>
           <FormGroup>
             <Label className="col-form-label" for="recipient-name">Category</Label>
-            <Col md="6">
+            <Col md="12">
               <div>
                 <Input className="form-control form-control-inverse btn-square" name="select" type="select"
                   value={selectedCatOption} onChange={handleaddSelectChange}>
@@ -341,6 +394,39 @@ const SubCategoryTable = () => {
         <ModalFooter className='justify-content-center'>
           <Btn attrBtn={{ color: 'secondary', onClick: statusModalToggle }} >Close</Btn>
           <Btn attrBtn={{ color: 'primary', onClick: submitStatus }}>Save Changes</Btn>
+        </ModalFooter>
+      </CommonModal>
+      <CommonModal isOpen={storeVar.isImageOpenModal} title={formVar.modalTitle} toggler={Imagetoggle} >
+        <Form>
+          <FormGroup>
+            {
+              formVar.bannerImageURL && <>
+                <div className='d-flex justify-content-center h-10-r'>
+                  <img className=' h-100' src={formVar.bannerImageURL} alt="" />
+                </div>
+              </>
+            }
+            <Label className="col-form-label" for="recipient-name">Update Logo</Label>
+            <Dropzone
+              className='dropzone dz-clickable'
+              onChangeStatus={handleChangeStatus}
+              maxFiles={1}
+              multiple={false}
+              // canCancel={false}
+              accept="image/*"
+              inputContent='Drop A File'
+              styles={{
+                dropzone: { width: '100%', height: 150 },
+                dropzoneActive: { borderColor: 'green' },
+              }}
+            />
+            {submit && filesValid() ? <span className='d-block font-danger'>{filesValid()}</span> : ""}
+          </FormGroup>
+
+        </Form>
+        <ModalFooter>
+          <Btn attrBtn={{ color: 'secondary', onClick: Imagetoggle }} >Close</Btn>
+          <Btn attrBtn={{ color: 'primary', onClick: submitImage }}>Save Changes</Btn>
         </ModalFooter>
       </CommonModal>
     </Fragment>
