@@ -1,9 +1,9 @@
 import axios from "axios";
 import { authHeader } from "../_helper/auth-header";
 
-const rootUrl = 'http://localhost:1312/api/v1/';
+// const rootUrl = 'http://localhost:1312/api/v1/';
 // const rootUrl = 'http://192.168.29.56:1312/api/v1/';
-// const rootUrl = 'https://service.zeocart.com/api/v1/';
+const rootUrl = 'https://service.zeocart.com/api/v1/';
 
 
 
@@ -20,8 +20,8 @@ const coupanUrl = rootUrl + 'coupans';
 const userUrl = rootUrl + 'account/users?';
 const blogsUrl = rootUrl + 'blogs/';
 const productURL = rootUrl + 'product';
-const ordersURL = rootUrl + 'carts/admin';
-
+const ordersURL = rootUrl + 'carts';
+const paymentHistoryURL = rootUrl + 'payment-history';
 
 
 
@@ -219,8 +219,15 @@ async function statusUpdateBrands(id, status) {
 }
 
 async function ordersdata(limit, offset, status, keyword, paymentStatus, paymentMode) {
-  return await axios.get(ordersURL+ '/list?limit='+limit+'&offset='+offset+'&status='+status+ '&keyword='+keyword+ '&paymentStatus='+paymentStatus+ '&paymentMode='+paymentMode, {
+  return await axios.get(ordersURL+ '/admin/list?limit='+limit+'&offset='+offset+'&status='+status+ '&keyword='+keyword+ '&paymentStatus='+paymentStatus+ '&paymentMode='+paymentMode+ '&fromDate=2024-01-01&toDate=2024-05-05', {
     headers: await authHeader()
+  })
+}
+
+async function downloadInvoicePdf(id) {
+  return await axios.get(ordersURL+ '/invoice/'+id, {
+    headers: await authHeader("Blob"),
+    responseType: "blob",
   })
 }
 
@@ -302,7 +309,7 @@ async function statusUpdateBlogs(id,status){
 
 
 async function productData(limit, offset, status, categoryId, subCategoryId, keyword){
-  return await axios.get(productURL+ 's/admin/all?limit='+limit+'&offset='+offset+'&status='+status+'&keyword='+keyword+'&categoryId=['+categoryId+']&subCategoryId=['+subCategoryId+']',{
+  return await axios.get(productURL+ 's/admin/all?limit='+limit+'&offset='+offset+'&status='+status+'&keyword='+keyword+'&categoryId='+categoryId+'&subCategoryId='+subCategoryId,{
     headers: await authHeader(),
   })
 }
@@ -312,6 +319,14 @@ async function createProducts(data){
     headers:await authHeader(),
   })
 }
+async function updateProducts(id, data){
+  console.log(data);
+  return axios.patch(productURL +'s/'+id ,data.data,{
+    headers:await authHeader(),
+  })
+}
+
+
 async function statusUpdateProducts(id,status){
   return axios.put(productURL+ 's/status/'+id,{status},{
     headers:await authHeader(),
@@ -327,7 +342,13 @@ async function productImageData(id){
  
 
 async function addproductImageData(id, file){
-  return await axios.post(productURL+ '-images/'+id,{ file} ,{
+  return await axios.post(productURL+ '-images/'+id+'/IMAGE/'+null ,{ file} ,{
+    headers: await authHeader('FormData'),
+  })
+} 
+
+async function addproductURLData(id, url){
+  return await axios.post(productURL+ '-images/'+id+'/VIDEO/'+url ,{
     headers: await authHeader('FormData'),
   })
 } 
@@ -434,7 +455,17 @@ async function getUserById(id) {
     headers: await authHeader(),
   })
 }
+async function paymentList(keyword, limit, offset, fromDate, toDate, status, payType) {
+  return await axios.get(paymentHistoryURL + '/all/list?limit='+limit+'&offset='+offset+'&fromDate='+fromDate+'&toDate='+toDate+'&status='+status+'&type='+payType+'&keyword='+keyword, {
+    headers: await authHeader(),
+  })
+}
 
+async function paymentDetails(id) {
+  return await axios.get(paymentHistoryURL + '/'+id , {
+    headers: await authHeader(),
+  })
+}
 export const service = {
   login,
   dashboard,
@@ -498,14 +529,18 @@ export const service = {
   statusUpdateBrands,
 
   ordersdata,
+  downloadInvoicePdf,
+
 
 
   productData,
   createProducts,
+  updateProducts,
   statusUpdateProducts,
 
   productImageData,
   addproductImageData,
+  addproductURLData,
   deleteProductImagesData,
 
 
@@ -523,10 +558,10 @@ export const service = {
   addSliderSpecialization,
   deleteSliderSpecialization,
 
- 
-
 
 
   getUser,
   getUserById,
+
+  paymentList, paymentDetails,
 }

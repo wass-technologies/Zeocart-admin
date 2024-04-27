@@ -32,7 +32,7 @@ const SocialWidget = (props) => {
         </div>
         <div className='social-content'>
           <div>
-            <H5 attrH5={{ className: 'mb-1' }}>{props.data}</H5>
+            <H5 attrH5={{ className: 'mb-1' }}>{props?.data}</H5>
             <p></p>
             {/* <span className='f-light'>{props.title}</span> */}
           </div>

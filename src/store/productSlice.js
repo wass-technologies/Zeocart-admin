@@ -89,7 +89,6 @@ export function addProduct(payload) {
       dispatch(setLoading(true))
       await service.createProducts(payload).then(
         (response) => {
-          console.log(response.data);
           dispatch(updateProductData(response.data))
           dispatch(setLoading(false))
           dispatch(ModalToggle())
@@ -104,14 +103,13 @@ export function addProduct(payload) {
     }
   }
 }
-export function updateBrand(payload) {
+export function updateProductsData(id, payload) {
 
-  return async function updateBrandsThunk(dispatch) {
+  return async function updateProductDataThunk(dispatch) {
     try {
       dispatch(setLoading(true))
-      await service.updateBrands(payload.id, payload.name).then(
+      await service.updateProducts(id, payload).then(
         (response) => {
-          console.log(response.data);
           dispatch(updateProductData(response.data))
           dispatch(setLoading(false))
           dispatch(ModalToggle())
@@ -172,11 +170,11 @@ export function UpdateProductStatus(payload) {
   }
 }
 
-export function statusDeleteBrandStatus(id, status) {
-  return async function statusDeleteBrandsThunk(dispatch) {
+export function statusDeleteProductsStatus(id, status) {
+  return async function statusDeleteProductsStatusThunk(dispatch) {
     try {
       dispatch(setLoading(true))
-      await service.statusUpdateBrands(id, status).then(
+      await service.statusUpdateProducts(id, status).then(
         (response) => {
           console.log(response.data);
           dispatch(updateProductData(response.data))

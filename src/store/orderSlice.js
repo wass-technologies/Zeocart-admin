@@ -24,8 +24,9 @@ export const ordersSlice = createSlice({
   name: 'orders',
   initialState,
   reducers: {
-    setbrand(state, { payload }) { 
-      state.ordersData = payload;
+    setbrand(state, { payload }) {
+      state.ordersData = payload.result;
+      state.orderCount = payload.total;
     },
     updateBrandsData(state, { payload }) {
       const objIndex = state.ordersData.findIndex((obj) => obj.id === payload.id);
@@ -50,11 +51,48 @@ export const ordersSlice = createSlice({
     },
     ImagestatusToggle(state, { payload }) {
       state.isImageOpenModal = !state.isImageOpenModal
-    }
+    },
+    downloadFile(state, { payload }) {
+      // const link = document.createElement('a');
+      // link.href = URL.createObjectURL(payload.pdfData);
+      // link.download = payload.fileName;
+      // document.body.append(link);
+      // link.click();
+      // link.remove();
+      // setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+
+      if (
+        window.navigator &&
+        window.navigator.msSaveOrOpenBlob
+      ) return window.navigator.msSaveOrOpenBlob(payload.pdfData);
+
+      // For other browsers:
+      // Create a link pointing to the ObjectURL containing the blob.
+      const data = window.URL.createObjectURL(payload.pdfData);
+
+      const link = document.createElement('a');
+      link.href = data;
+      link.download = payload.fileName;
+
+      // this is necessary as link.click() does not work on the latest firefox
+      link.dispatchEvent(
+        new MouseEvent('click', {
+          bubbles: true,
+          cancelable: true,
+          view: window
+        })
+      );
+
+      setTimeout(() => {
+        // For Firefox it is necessary to delay revoking the ObjectURL
+        window.URL.revokeObjectURL(data);
+        link.remove();
+      }, 100);
+    },
   },
 });
 
-export const { setbrand, updateBrandsData, DeleteBrandsData, isOpenModal, isImageOpenModal, ModalToggle, setFaqsSpecializationData, isOpenStatusModal, statusToggle, ImagestatusToggle } = ordersSlice.actions;
+export const { setbrand, downloadFile, updateBrandsData, DeleteBrandsData, isOpenModal, isImageOpenModal, ModalToggle, setFaqsSpecializationData, isOpenStatusModal, statusToggle, ImagestatusToggle } = ordersSlice.actions;
 export default ordersSlice.reducer;
 
 export function fetchorders(limit, offset, status, keyword, paymentStatus, paymentMode) {
@@ -63,7 +101,7 @@ export function fetchorders(limit, offset, status, keyword, paymentStatus, payme
       await service.ordersdata(limit, offset, status, keyword, paymentStatus, paymentMode).then(
         (response) => {
           console.log(response);
-          dispatch(setbrand(response.data.result));
+          dispatch(setbrand(response.data));
         }, (error) => {
         }
       );
@@ -73,6 +111,34 @@ export function fetchorders(limit, offset, status, keyword, paymentStatus, payme
     }
   }
 }
+
+export function downloadInvoiceData(id) {
+  return async function downloadInvoiceDataThunk(dispatch, getState) {
+    try {
+      await service.downloadInvoicePdf(id).then(
+        (response) => {
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", 'invoice.pdf');
+          document.body.appendChild(link);
+          link.click();
+          // dispatch(downloadFile(response.data))
+
+          // dispatch(setbrand(response.data.result));
+        }, (error) => {
+        }
+      );
+
+    } catch (err) {
+
+    }
+  }
+}
+
+
+
+
 export function addBrand(payload) {
   console.log(payload);
   return async function addBrandsThunk(dispatch) {

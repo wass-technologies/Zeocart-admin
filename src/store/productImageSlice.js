@@ -27,10 +27,10 @@ export const productImagesSlice = createSlice({
     setbrand(state, { payload }) { 
       state.brandData = payload;
     },
-    updateBrandsData(state, { payload }) {
+    updateImageData(state, { payload }) {
       const objIndex = state.brandData.findIndex((obj) => obj.id === payload.id);
       if (objIndex >= 0) {
-        state.brandData[objIndex] = payload
+        state.brandData[objIndex].id = payload.id
       }
     },
     isOpenModal(state, { payload }) {
@@ -54,7 +54,7 @@ export const productImagesSlice = createSlice({
   },
 });
 
-export const { setbrand, updateBrandsData, DeleteBrandsData, isOpenModal, isImageOpenModal, ModalToggle, setFaqsSpecializationData, isOpenStatusModal, statusToggle, ImagestatusToggle } = productImagesSlice.actions;
+export const { setbrand, updateImageData, DeleteBrandsData, isOpenModal, isImageOpenModal, ModalToggle, setFaqsSpecializationData, isOpenStatusModal, statusToggle, ImagestatusToggle } = productImagesSlice.actions;
 export default productImagesSlice.reducer;
 
 export function fetchProductImage(id, limit, keyword, offset, status) {
@@ -80,10 +80,10 @@ export function addProductImage(id, file) {
       await service.addproductImageData(id, file).then(
         (response) => {
           console.log(response);
-          dispatch(updateBrandsData(response.data)); 
           dispatch(isImageOpenModal())
           dispatch(setLoading(false))
           successHandler('Added Successfully')
+          dispatch(updateImageData(response.data)); 
 
         }, (error) => {
         }
@@ -95,14 +95,34 @@ export function addProductImage(id, file) {
   }
 }
 
+export function addProductImageUrl(id, url) {
+  return async function addProductImageThunk(dispatch, getState) {
+    try {
+      dispatch(setLoading(true))
+      await service.addproductURLData(id, url).then(
+        (response) => {
+          console.log(response);
+          dispatch(isImageOpenModal())
+          dispatch(setLoading(false))
+          successHandler('Url Added Successfully')
+          dispatch(updateImageData(response.data)); 
 
+        }, (error) => {
+        }
+      );
+
+    } catch (err) {
+
+    }
+  }
+}
 export function statusDeleteProduct(id, status) {
   return async function statusDeleteBrandsThunk(dispatch) {
     try {
       dispatch(setLoading(true))
       await service.deleteProductImagesData(id, status).then(
         (response) => {
-          dispatch(updateBrandsData(response.data)); 
+          dispatch(updateImageData(response.data)); 
           console.log(response.data);
           dispatch(setLoading(false))
           successHandler('Deleted Successfully')

@@ -1,11 +1,6 @@
 // dashbaord
 import Social from "../Components/Dashboard/Social";
-import State from "../Pages/Location/State";
-import City from "../Pages/Location/City";
-import Area from "../Pages/Location/Area";
-import Degree from "../Pages/Degree";
 import Faqs from "../Pages/Faqs";
-import FaqsSpecialization from "../Pages/Faqs/FaqSpecialization";
 import BannerHome from "../Pages/BannerHome";
 import BannerGlass from "../Pages/BannerGlass";
 import BannerCover from "../Pages/BannerCover";
@@ -24,7 +19,7 @@ import Blogs from "../Pages/Blogs/Blogs";
 import Products from "../Pages/Products/Products";
 import ProductBanner from "../Pages/Products/ProductBanners/AddProductBanners";
 import Payments from "../Pages/Payments";
-
+import PaymentDetails from '../Pages/Payments/PaymentsDetail';
 
 export const routes = [
   { path: `${process.env.PUBLIC_URL}/dashboard/social/:layout`, Component: <Social /> },
@@ -43,14 +38,7 @@ export const routes = [
   { path: `${process.env.PUBLIC_URL}/users/:layout`, Component: <Staff /> },
 
 
-  //location
-  { path: `${process.env.PUBLIC_URL}/location/state/:layout`, Component: <State /> },
-  { path: `${process.env.PUBLIC_URL}/location/city/:layout`, Component: <City /> },
-  { path: `${process.env.PUBLIC_URL}/location/area/:layout`, Component: <Area /> },
 
- 
-  // Degree
-  { path: `${process.env.PUBLIC_URL}/degree/:layout`, Component: <Degree /> },
    // Brands
    { path: `${process.env.PUBLIC_URL}/brands/:layout`, Component: <Brand /> },
    
@@ -59,10 +47,10 @@ export const routes = [
    { path: `${process.env.PUBLIC_URL}/subcategories/:layout`, Component: <SubCategory /> },
    { path: `${process.env.PUBLIC_URL}/orders/:layout`, Component: <Orders /> },
    { path: `${process.env.PUBLIC_URL}/payments/:layout`, Component: <Payments /> },
+   { path: `${process.env.PUBLIC_URL}/payments/paymentdetails/:layout`, Component: <PaymentDetails /> },
    
    // Faq
   { path: `${process.env.PUBLIC_URL}/faqs/:layout`, Component: <Faqs /> },
-  { path: `${process.env.PUBLIC_URL}/faq-specialization/:layout`, Component: <FaqsSpecialization /> },
 
   //Banner
   { path: `${process.env.PUBLIC_URL}/homepage/:layout`, Component: <BannerHome /> },

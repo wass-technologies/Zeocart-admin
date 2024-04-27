@@ -3,22 +3,10 @@ import authReducer from './authSlice';
 import loadingReducer from './loader';
 import dashboardReducer from './dashboardSlice';
 import ordersReducer from './orderSlice';
-import stateReducer from './stateSlice';
-import cityReducer from './citySlice';
-import areaReducer from './areaSlice';
-import degreeReducer from './degreeSlice';
 import faqsReducer from './faqsSlice';
-import faqsSpecializationReducer from './faqsSpecializationSlice';
 import bannerReducer from './bannerSlice';
-import bannerSpecializationReducer from './bannerSpecializationSlice';
 import sliderReducer from './sliderSlice';
-import sliderSpecializationReducer from './sliderSpecializationSlice';
-import settingsReducer from './settingsSlice';
-import specializationReducer from './specializationSlice';
 import pagesReducer from './pagesSlice';
-import diseasesReducer from './diseasesSlice';
-import languagesReducer from './languagesSlice';
-import diseaseQuestionsReducer from './diseaseQuestionsSlice';
 import userReducer from './userSlice';
 import staffReducer from './staffSlice';
 import advertisementReducer from './addvertiseSlice';
@@ -49,20 +37,10 @@ export const store = configureStore({
     subcategory : subcategoryReducer,
     orders: ordersReducer,
     productImage: productImageReducer,
-
-    
-
-    states:stateReducer,
-    city:cityReducer,
-    area:areaReducer,
-    degree:degreeReducer,
-    faqsSpecialization:faqsSpecializationReducer,
-    bannerSpecialization:bannerSpecializationReducer,
     slider:sliderReducer,
-    sliderSpecialization:sliderSpecializationReducer,
-    
     users:userReducer,
     staff:staffReducer,
+    payment: paymentReducer,
   },
 })
 

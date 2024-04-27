@@ -50,7 +50,7 @@ $svgSize: 70px;
 
 //vars specific for curves
 $animationStep: 2;
-$increase: pi() / 100;
+$increase: calc(pi() / 100);
 
 $backgroundColor: skyblue;
 $fontColor: white;

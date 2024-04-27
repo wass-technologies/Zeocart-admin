@@ -1,41 +1,36 @@
-import React, { Fragment, useEffect, useState } from 'react';
-import { Col, Card, CardHeader, Table, Form, FormGroup, Label, Input, ModalFooter, Row } from 'reactstrap';
-import { Btn } from '../../AbstractElements';
-import { CheckCircle, XCircle, Edit, FileText, Trash2 } from "react-feather"
+import React, { Fragment, useEffect, useState, useContext } from 'react';
+import { Col, Card, CardHeader, Table, Label, Input, Row } from 'reactstrap';
+import { CheckCircle, XCircle, Edit, FileText, Trash2, Airplay } from "react-feather"
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
-import CommonModal from '../../Components/Modals/modal';
-import { getCategory, isOpenModal, statusToggle, addCategoryData, updatecategoryData, ModalToggle, isOpenStatusModal, statusUpdateCategory, statusDeleteCategoryStatus } from '../../store/categorySlice';
 import Pagination from '../../Components/Pagination/Pagination';
-import SweetAlert from 'sweetalert2';
 import moment from 'moment';
-
+import { paymentsData } from '../../store/paymentSlice';
+import CustomizerContext from '../../_helper/Customizer';
 
 
 const PaymentsTable = () => {
-  const storeVar = useSelector(state => state.category)
+  const storeVar = useSelector(state => state.payment)
   console.log(storeVar);
   const dispatch = useDispatch();
-  const toggle = () => dispatch(ModalToggle());
-  const statusModalToggle = () => dispatch(statusToggle());
-  const [degreeName, setDegreeName] = useState("");
-  const [stateStatus, setStateStatus] = useState('ACTIVE');
-  const [submit, setSubmit] = useState(false);
+  const history = useNavigate();
+  const { layoutURL } = useContext(CustomizerContext);
+  const [typingTimer, setTypingTimer] = useState(null);
+  const typingDelay = 800;
   const [formVar, setFormVar] = useState({
     keyword: '',
     limit: 10,
     offset: 0,
     currentPage: 1,
-    status: 'ACTIVE',
-    modalTitle: null,
-    editState: false,
-    cityId: null,
-    degreeId: null,
-    startDate: moment().subtract(15, 'days').format('YYYY-MM-DD'),
-    endDate: moment().format('YYYY-MM-DD'),
+    status: 'COMPLETED',
+    fromDate: moment().subtract(15, 'days').format('YYYY-MM-DD'),
+    toDate: moment().format('YYYY-MM-DD'),
+    payType: "All",
+
   });
 
   useEffect(() => {
-    dispatch(getCategory(formVar.limit, formVar.offset, formVar.status, formVar.keyword))
+    dispatch(paymentsData(formVar.keyword, formVar.limit, formVar.offset, formVar.fromDate, formVar.toDate, formVar.status, formVar.payType))
   }, []);
 
   const pageChange = (page) => {
@@ -46,96 +41,43 @@ const PaymentsTable = () => {
       offset: offset
     }))
 
-    dispatch(getCategory(formVar.limit, offset, formVar.status, formVar.keyword))
+    dispatch(paymentsData(formVar.keyword, formVar.limit, offset, formVar.fromDate, formVar.toDate, formVar.status, formVar.payType))
   };
-  const searchState = (e) => {
-    setFormVar((prevFormVar) => ({ ...prevFormVar, keyword: e.target.value }))
-    dispatch(getCategory(formVar.limit, formVar.offset, formVar.status, e.target.value))
-  }
 
   const handleInputChange = (e) => {
     setFormVar((prevFormVar) => ({ ...prevFormVar, status: e.target.value }))
-    dispatch(getCategory(formVar.limit, formVar.offset, e.target.value, formVar.keyword))
+    dispatch(paymentsData(formVar.keyword, formVar.limit, formVar.offset, formVar.fromDate, formVar.toDate, e.target.value, formVar.payType))
   };
-  const EditToggleModal = (data) => {
-    dispatch(isOpenModal(true))
-    setFormVar((prevFormVar) => ({
-      ...prevFormVar,
-      editState: true,
-      degreeId: data.id,
-      modalTitle: 'Edit Category'
-    }))
-    setDegreeName(data.name)
-  }
-  const AddToggleModal = () => {
-    dispatch(isOpenModal(true))
-    setFormVar((prevFormVar) => ({
-      ...prevFormVar,
-      editState: false,
-      modalTitle: 'Add Category',
-    }))
-    setDegreeName('')
-  }
-  const onValueChange = (event) => {
-    setStateStatus(event.target.value)
-  }
-  const statusToggleModal = (data) => {
-    dispatch(isOpenStatusModal(true))
-    setStateStatus(data.status)
-    setFormVar((prevFormVar) => ({
-      ...prevFormVar,
-      degreeId: data.id,
-    }))
-  }
-  const BannerDelete = (data) => {
-    SweetAlert.fire({
-      title: 'Are you sure?',
-      text: 'Once deleted, you will not be able to recover this imaginary file!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Ok',
-      cancelButtonText: 'cancel',
-      reverseButtons: true
-    })
-      .then((result) => {
-        if (result.value) {
-          console.log(data);
-          dispatch(statusDeleteCategoryStatus(data.id, 'DELETED'))
-
-        }
-      });
-  }
-  const submitCategory = () => {
-    if (degreeValid()) {
-      setSubmit(true)
-      return null
-    }
-    setSubmit(false)
-    if (formVar.editState) {
-      dispatch(updatecategoryData({ id: formVar.degreeId, name: degreeName }))
-    } else {
-      dispatch(addCategoryData(degreeName))
-    }
-  }
-  const submitStatus = () => {
-    dispatch(statusUpdateCategory({ id: formVar.degreeId, status: stateStatus }))
-  }
-
-  const degreeValid = () => {
-    if (!degreeName) {
-      return "Category name is required";
-    }
-  }
+  const handleTypeChange = (e) => {
+    setFormVar((prevFormVar) => ({ ...prevFormVar, payType: e.target.value }))
+    dispatch(paymentsData(formVar.keyword, formVar.limit, formVar.offset, formVar.fromDate, formVar.toDate, formVar.status, e.target.value))
+  };
 
   const handleDateChange = (e) => {
-    setFormVar((prevFormVar) => ({ ...prevFormVar, startDate: e.target.value }));
-    // dispatch(fetchlead(formVar.limit, formVar.offset, formVar.status, formVar.keyword, e.target.value, formVar.endDate))
+    setFormVar((prevFormVar) => ({ ...prevFormVar, fromDate: e.target.value }));
+    dispatch(paymentsData(formVar.keyword, formVar.limit, formVar.offset, e.target.value, formVar.toDate, formVar.status, formVar.payType))
 
   }
   const handleDateendChange = (e) => {
-    setFormVar((prevFormVar) => ({ ...prevFormVar, endDate: e.target.value }))
-    // dispatch(fetchlead(formVar.limit, formVar.offset, formVar.status, formVar.keyword, formVar.startDate, e.target.value))
+    setFormVar((prevFormVar) => ({ ...prevFormVar, toDate: e.target.value }))
+    dispatch(paymentsData(formVar.keyword, formVar.limit, formVar.offset, formVar.fromDate, e.target.value, formVar.status, formVar.payType))
 
+  }
+
+  const searchState = (e) => {
+    setFormVar((prevFormVar) => ({ ...prevFormVar, keyword: e.target.value }))
+    searchWithDelay(e.target.value)
+  }
+  const searchWithDelay = (keyword) => {
+    clearTimeout(typingTimer);
+    const timer = setTimeout(() => {
+      dispatch(paymentsData(keyword, formVar.limit, formVar.offset, formVar.fromDate, formVar.toDate, formVar.status, formVar.payType))
+    }, typingDelay);
+    setTypingTimer(timer);
+  };
+  const navigate = (data) => {
+    console.log(data);
+    history(`/payments/paymentdetails/` + layoutURL + '?id=' + data.id)
   }
   return (
     <Fragment>
@@ -144,29 +86,53 @@ const PaymentsTable = () => {
           <CardHeader>
             <Row>
               <Col md="3">
-                <Label className="col-form-label" for="recipient-name">From</Label>
+                <Label className="col-form-label" htmlFor="recipient-name">Search</Label>
               </Col>
-              <Col md="3">
-                <Label className="col-form-label" for="recipient-name">To</Label>
+              <Col md="2">
+                <Label className="col-form-label" htmlFor="recipient-name">From</Label>
+              </Col>
+              <Col md="2">
+                <Label className="col-form-label" htmlFor="recipient-name">To</Label>
+              </Col>
+              <Col md="2">
+                <Label className="col-form-label" htmlFor="recipient-name">Payment Status</Label>
+              </Col>
+              <Col md="2">
+                <Label className="col-form-label" htmlFor="recipient-name">Payment Type</Label>
               </Col>
             </Row>
             <Row>
               <Col md="3">
+                <Input className="form-control" placeholder='Search..' type="text" id="yourInputId"
+                  value={formVar.keyword} onChange={(e) => searchState(e)}
+                />
+              </Col>
+              <Col md="2">
                 <Input className="form-control form-control-inverse btn-square" max={moment().format('YYYY-MM-DD')} name="select" type="DATE"
-                  value={formVar.startDate} onChange={handleDateChange}>
+                  value={formVar.fromDate} onChange={handleDateChange}>
                 </Input>
               </Col>
-              <Col md="3">
+              <Col md="2">
                 <Input className="form-control form-control-inverse btn-square" max={moment().format('YYYY-MM-DD')} name="select" type="DATE"
-                  value={formVar.endDate} onChange={handleDateendChange}>
+                  value={formVar.toDate} onChange={handleDateendChange}>
                 </Input>
               </Col>
-              <Col md="3" className='d-flex justify-content-end align-items-center'>
-              <Input className="form-control form-control-inverse btn-square" name="select" type="select"
+              <Col md="2" className='d-flex justify-content-end align-items-center'>
+                <Input className="form-control form-control-inverse btn-square" name="select" type="select"
                   value={formVar.status} onChange={handleInputChange}>
-                  <option value='ACTIVE'>ACTIVE</option>
-                  <option value='DELETED'>DELETED</option>
                   <option value='PENDING'>PENDING</option>
+                  <option value='COMPLETED'>COMPLETED</option>
+                  <option value='CANCELLED'>CANCELLED</option>
+                  <option value='FAILED'>FAILED</option>
+                  <option value='REFUNDED'>REFUNDED</option>
+                </Input>
+              </Col>
+              <Col md="2" className='d-flex justify-content-end align-items-center'>
+                <Input className="form-control form-control-inverse btn-square" name="select" type="select"
+                  value={formVar.payType} onChange={handleTypeChange}>
+                  <option value='All'>ALL</option>
+                  <option value='COD'>COD</option>
+                  <option value='Phone Pe'>PHONE PAY</option>
                 </Input>
               </Col>
             </Row>
@@ -178,21 +144,30 @@ const PaymentsTable = () => {
               <thead>
                 <tr>
                   <th scope='col'>Sl.No</th>
-                  <th scope='col'>Name</th>
+                  <th scope='col'>Order Id</th>
+                  <th scope='col'>Invoice Id</th>
+                  <th scope='col'>Total</th>
+                  <th scope='col'>Wallet</th>
+                  <th scope='col'>Shipping Charges</th>
                   <th scope='col'>Status</th>
                   <th scope='col'>Action</th>
                 </tr>
               </thead>
               <tbody>
-                {storeVar?.categoryData?.map((item, index) => (
+
+                {storeVar?.paymentData?.map((item, index) => (
                   <tr key={item.id}>
                     <th scope='row'>{index + 1}</th>
-                    <td>{item.name}</td>
+                    <td>{item.orderId}</td>
+                    <td>{item.invoiceNumber}</td>
+                    <td>{item.total}</td>
+                    <td>{item.wallet}</td>
+                    <td>{item.shippingCharge}</td>
                     <td>
                       {
-                        item.status === 'ACTIVE' && <>
+                        item.status === 'COMPLETED' && <>
                           <span className={`font-success rounded-1 p-1 me-2 d-flex align-items-center`}>
-                            {item.status === 'ACTIVE' && <CheckCircle />}
+                            {item.status === 'COMPLETED' && <CheckCircle />}
                             &nbsp; {item.status}
                           </span>
                         </>
@@ -206,91 +181,56 @@ const PaymentsTable = () => {
                         </>
                       }
                       {
-                        item.status === 'DEACTIVE' && <>
-                          <span className={`font-danger w-50 rounded-1 p-1 me-2 d-flex align-items-center`}>
-                            {item.status === 'DEACTIVE' && <XCircle />}
+                        item.status === 'REFUNDED' && <>
+                          <span className={`font-warning rounded-1 p-1 me-2 d-flex align-items-center`}>
+                            {item.status === 'REFUNDED' && <CheckCircle />}
                             &nbsp; {item.status}
                           </span>
                         </>
                       }
                       {
-                        item.status === 'DELETED' && <>
+                        item.status === 'FAILED' && <>
                           <span className={`font-danger w-50 rounded-1 p-1 me-2 d-flex align-items-center`}>
-                            {item.status === 'DELETED' && <XCircle />}
+                            {item.status === 'FAILED' && <XCircle />}
+                            &nbsp; {item.status}
+                          </span>
+                        </>
+                      }
+                      {
+                        item.status === 'CANCELLED' && <>
+                          <span className={`font-danger w-50 rounded-1 p-1 me-2 d-flex align-items-center`}>
+                            {item.status === 'CANCELLED' && <XCircle />}
                             &nbsp; {item.status}
                           </span>
                         </>
                       }
                     </td>
                     <td>
-                      <div className='d-flex gap-2'>
-                        <div className='cursor-pointer bg-light-primary font-primary action-icon'>
-                          <Edit onClick={(e) => EditToggleModal(item)} />
-                          <div className="tooltipCustom">Edit</div>
-                        </div>
-                        <div className='cursor-pointer action-icon'>
-                          <FileText onClick={(e) => statusToggleModal(item)} />
-                          <div className="tooltipCustom">Status Update</div>
-                        </div>
-                        <div className='cursor-pointer font-danger action-icon'>
-                          <Trash2 onClick={(e) => BannerDelete(item)} />
-                          <div className="tooltipCustom">Delete</div>
-                        </div>
+                    <div className='d-flex gap-2'>
+                      <div className='cursor-pointer  font-success action-icon'>
+                        <Airplay onClick={(e) => navigate(item)} />
+                        <div className="tooltipCustom">More Details</div>
+                      </div>
                       </div>
                     </td>
                   </tr>
                 ))}
+
+
               </tbody>
             </Table>
           </div>
+          {storeVar?.paymentData?.length <= 0 && (
+            <div className="col-form-label" >&nbsp;&nbsp;&nbsp;No Payments found</div>
+          )}
+
         </Card>
         {
           storeVar.totalDegree > 0 &&
-          <Pagination currentPage={formVar.currentPage} totalItem={storeVar.totalDegree}
+          <Pagination currentPage={formVar.currentPage} totalItem={storeVar.paymentCount}
             itemsPerPage={formVar.limit} showEllipsisAfter={true} visiblePageCount={3} onPageChange={pageChange} />
         }
       </Col>
-      <CommonModal isOpen={storeVar.isOpenModal} title={formVar.modalTitle} toggler={toggle} >
-        <Form>
-          <FormGroup>
-            <Label className="col-form-label" for="recipient-name">Name</Label>
-            <Input className="form-control" type="text" placeholder='Enter Category Name' onChange={(e) => setDegreeName(e.target.value)} value={degreeName} />
-            {submit && degreeValid() ? <span className='d-block font-danger'>{degreeValid()}</span> : ""}
-          </FormGroup>
-        </Form>
-        <ModalFooter>
-          <Btn attrBtn={{ color: 'secondary', onClick: toggle }} >Close</Btn>
-          <Btn attrBtn={{ color: 'primary', onClick: submitCategory }}>Save Changes</Btn>
-        </ModalFooter>
-      </CommonModal>
-      <CommonModal isOpen={storeVar.isStatusOpenModal} title={'Status'} toggler={statusModalToggle} >
-        <Col>
-          <div className='d-flex m-15 m-checkbox-inline justify-content-center custom-radio-ml'>
-            <div className='radio radio-primary'>
-              <Input id='radioinline1' type='radio' className="radio_animated" name='radio1' checked={stateStatus === 'ACTIVE'} onChange={onValueChange} value='ACTIVE' />
-              <Label className='mb-0' for='radioinline1'>
-                <span className='digits'>ACTIVE</span>
-              </Label>
-            </div>
-            <div className='radio radio-primary'>
-              <Input id='radioinline2' type='radio' className="radio_animated" name='radio2' checked={stateStatus === 'DEACTIVE'} onChange={onValueChange} value='DEACTIVE' />
-              <Label className='mb-0' for='radioinline2'>
-                <span className='digits'>DEACTIVE</span>
-              </Label>
-            </div>
-            <div className='radio radio-primary'>
-              <Input id='radioinline3' type='radio' className="radio_animated" name='radio3' checked={stateStatus === 'PENDING'} onChange={onValueChange} value='PENDING' />
-              <Label className='mb-0' for='radioinline3'>
-                <span className='digits'>PENDING</span>
-              </Label>
-            </div>
-          </div>
-        </Col>
-        <ModalFooter className='justify-content-center'>
-          <Btn attrBtn={{ color: 'secondary', onClick: statusModalToggle }} >Close</Btn>
-          <Btn attrBtn={{ color: 'primary', onClick: submitStatus }}>Save Changes</Btn>
-        </ModalFooter>
-      </CommonModal>
     </Fragment>
   );
 };

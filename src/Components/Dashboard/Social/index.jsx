@@ -1,6 +1,6 @@
 import React, { useEffect, Fragment } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Col, Container, Row } from 'reactstrap';
+import { Col, Container, Row, Label } from 'reactstrap';
 import { Breadcrumbs } from '../../../AbstractElements';
 import { SmallWidgetsData, SocialWidgetData } from '../../../Data/Social';
 import { dashboardsData, dashboardpie } from '../../../store/dashboardSlice';
@@ -15,11 +15,12 @@ import SocialWidget from '../../Common/CommonWidgets/SocialWidget';
 import Views from './Views';
 import MonthlyProfits from './MonthlyProfits';
 
+
+
+
 const Social = () => {
   const dispatch = useDispatch();
-
   const dashboard = useSelector(state => state.dashboard);
-  console.log(dashboard);
 
   useEffect(() => {
     const today = new Date();
@@ -38,29 +39,80 @@ const Social = () => {
           <Col xxl='12' xl='12' >
             <Row>
               <Col md='3' sm='6' >
-                <SocialWidget data={dashboard?.dashboardData?.categoryCount} increment={dashboard?.dashboardData?.categoryOneMonthCount} title={'Total Category'} />
+                <SocialWidget data={dashboard?.dashboardData?.categoryCount} title={'Total Category'} />
               </Col>
               <Col md='3' sm='6' >
-                <SocialWidget data={dashboard?.dashboardData?.productCount} increment={dashboard?.dashboardData?.productOneMonthCount} title={'Total Product'} />
+                <SocialWidget data={dashboard?.dashboardData?.orderCounts?.orderedTotal} title={'Total Orders'} />
               </Col>
               <Col md='3' sm='6' >
-                <SocialWidget data={dashboard?.dashboardData?.orderDeliveredCount} increment={dashboard?.dashboardData?.orderDeliveredOneMonthCount} title={'Orders Delivered'} />
+                <SocialWidget data={dashboard?.dashboardData?.orderCounts?.deliveredTotal} title={'Orders Delivered'} />
               </Col>
               <Col md='3' sm='6' >
-                <SocialWidget data={dashboard?.dashboardData?.orderDispatchCount} increment={dashboard?.dashboardData?.orderDispatchOneMonthCount} title={'Orders Dispatched'} />
+                <SocialWidget data={dashboard?.dashboardData?.orderCounts?.dispatchedTotal} title={'Orders Dispatched'} />
               </Col>
               <Col md='3' sm='6' >
-                <SocialWidget data={dashboard?.dashboardData?.orderReturnCount} increment={dashboard?.dashboardData?.orderReturnOneMonthCount} title={'Orders Returned'} />
+                <SocialWidget data={dashboard?.dashboardData?.orderCounts?.cancelledTotal} title={'Orders Cancelled'} />
               </Col>
               <Col md='3' sm='6' >
-                <SocialWidget data={dashboard?.dashboardData?.totalOrderCount} increment={dashboard?.dashboardData?.totalOrderOneMonthCount} title={'Total Orders'} />
+                <SocialWidget data={dashboard?.dashboardData?.orderCounts?.paymentPendingTotal} title={'Orders Payment Pending'} />
               </Col>
-              <Col md='3'>
-                {/* <MonthlyProfits /> */}
+              <Col md='3' sm='6' >
+                <SocialWidget data={dashboard?.dashboardData?.orderCounts?.returnTotal} title={'Total Orders Returned'} />
               </Col>
-         
-              
             </Row>
+            <Label className="col-form-label  fw-semibold f-20" for="recipient-name">Total Payment</Label>
+
+            <Row>
+              <Col md='3' sm='6' >
+                <SocialWidget data={dashboard?.dashboardData?.paymentCounts?.completedTotal} title={'Completed'} />
+              </Col>
+              <Col md='3' sm='6' >
+                <SocialWidget data={dashboard?.dashboardData?.paymentCounts?.pendingTotal} title={'Pending'} />
+              </Col>
+              <Col md='3' sm='6' >
+                <SocialWidget data={dashboard?.dashboardData?.paymentCounts?.cancelledTotal} title={'Cancelled'} />
+              </Col>
+              <Col md='3' sm='6' >
+                <SocialWidget data={dashboard?.dashboardData?.paymentCounts?.failedTotal} title={'Failed'} />
+              </Col>
+            </Row>
+            <Label className="col-form-label  fw-semibold f-20" for="recipient-name">Actual Payment</Label>
+
+            {dashboard.dashboardData.paymentCounts && (
+              <Row>
+                <Col md='3' sm='6' >
+                  <SocialWidget data={dashboard.dashboardData.paymentCounts.completedTotal - dashboard.dashboardData.paymentCounts.completedWalletTotal} title={'Completed'} />
+                </Col>
+                <Col md='3' sm='6' >
+                  <SocialWidget data={dashboard.dashboardData.paymentCounts.pendingTotal - dashboard.dashboardData.paymentCounts.pendingWalletTotal} title={'Pending'} />
+                </Col>
+                <Col md='3' sm='6' >
+                  <SocialWidget data={dashboard.dashboardData.paymentCounts.cancelledTotal - dashboard.dashboardData.paymentCounts.cancelledWalletTotal} title={'Cancelled'} />
+                </Col>
+                <Col md='3' sm='6' >
+                  <SocialWidget data={dashboard.dashboardData.paymentCounts.failedTotal - dashboard.dashboardData.paymentCounts.failedWalletTotal} title={'Failed'} />
+                </Col>
+              </Row>
+            )}
+            <Label className="col-form-label  fw-semibold f-20" for="recipient-name">Wallet Payment</Label>
+            <Row>
+              <Col md='3' sm='6' >
+                <SocialWidget data={dashboard?.dashboardData?.paymentCounts?.completedWalletTotal} title={'Completed'} />
+              </Col>
+              <Col md='3' sm='6' >
+                <SocialWidget data={dashboard?.dashboardData?.paymentCounts?.pendingWalletTotal} title={'Pending'} />
+              </Col>
+              <Col md='3' sm='6' >
+                <SocialWidget data={dashboard?.dashboardData?.paymentCounts?.cancelledWalletTotal} title={'Cancelled'} />
+              </Col>
+              <Col md='3' sm='6' >
+                <SocialWidget data={dashboard?.dashboardData?.paymentCounts?.failedWalletTotal} title={'Failed'} />
+              </Col>
+            </Row>
+
+            <Col md='3'>
+              {/* <MonthlyProfits /> */}
+            </Col>
           </Col>
           {/* <Col xl='3' className='col-ed-none d-xxl-block d-lg-none box-col-none'>
             <Row>

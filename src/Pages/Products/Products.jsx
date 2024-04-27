@@ -7,7 +7,7 @@ import CommonModal from '../../Components/Modals/modal';
 import Dropzone from 'react-dropzone-uploader';
 import { getCategory } from '../../store/categorySlice';
 import { getsubCategory } from '../../store/subCategorySlice';
-import { fetchProduct, addProduct, BulkModalToggle, statusToggle, UpdateProductStatus, statusDeleteBrandStatus, isOpenModal, isOpenBulkModal, ModalToggle, isOpenStatusModal, isImageOpenModal, ImagestatusToggle, updateImageBrands } from '../../store/productSlice';
+import { fetchProduct, addProduct, BulkModalToggle, statusToggle, UpdateProductStatus, statusDeleteProductsStatus, isOpenModal, isOpenBulkModal, ModalToggle, isOpenStatusModal, isImageOpenModal, ImagestatusToggle, updateImageBrands, updateProductsData } from '../../store/productSlice';
 import { fetchbrand } from '../../store/brandsSlice';
 import CustomizerContext from '../../_helper/Customizer';
 import Pagination from '../../Components/Pagination/Pagination';
@@ -18,7 +18,6 @@ import { useNavigate } from "react-router-dom";
 
 const ProductTable = () => {
   const storeVar = useSelector(state => state.products)
-  console.log(storeVar);
   const catVar = useSelector(state => state.category)
   const subcatVar = useSelector(state => state.subcategory)
   const brandsVar = useSelector(state => state.brands)
@@ -60,8 +59,8 @@ const ProductTable = () => {
     length: '',
     breadth: '',
     height: '',
-    actualWeight: '',
-    volumetricWeight: '',
+    ACTUAL_WEIGHT: null,
+    VOLUMETRIC_WEIGHT: '',
     shortDesc: '',
     desc: '',
     price: '',
@@ -129,18 +128,9 @@ const ProductTable = () => {
       .then((result) => {
         if (result.value) {
 
-          dispatch(statusDeleteBrandStatus(data.id, 'DELETED'))
-
+          dispatch(statusDeleteProductsStatus(data.id, 'DELETED'))
         }
       });
-  }
-  const ImageEditModal = (data) => {
-
-    dispatch(isImageOpenModal(true))
-    setFormVar((prevFormVar) => ({
-      id: data.id,
-      modalTitle: 'Update Image',
-    }))
   }
 
   const handleInputChange = (e) => {
@@ -231,7 +221,29 @@ const ProductTable = () => {
       ...prevFormVar,
       editState: true,
       brandId: data.id,
-      modalTitle: 'Edit Products'
+      modalTitle: 'Edit Products',
+      title: data.title || '',
+      catId: data?.productCategory[0]?.category.id || '',
+      subCatId: data?.productSubCategory[0]?.subCategory.id || '',
+      price: data?.productVariant[0]?.price || '',
+      discountedPrice: data?.productVariant[0]?.discountedPrice || '',
+      discountedPercentage: data?.productVariant[0]?.discount || '',
+      selectedColor: data?.productVariant[0]?.name || '',
+      availability: data?.productVariant[0]?.availability || '',
+      skuid: data?.productVariant[0]?.sku || '',
+      warrentydays: data.warranty || '',
+      warrentymonth: data.warrantyIn || '',
+      returnday: data.returnInDays || '',
+      gstbill: data.gstBillAvailable || '',
+      freeShipping: data.freeShipping || '',
+      bestSeller: data.bestSeller || '',
+      length: data.LENGTH || '',
+      breadth: data.BREADTH || '',
+      height: data.HEIGHT || '',
+      ACTUAL_WEIGHT: data.ACTUAL_WEIGHT || '',
+      VOLUMETRIC_WEIGHT: data.VOLUMETRIC_WEIGHT || '',
+      shortDesc: data.shortDesc || '',
+      desc: data.desc || '',
     }))
 
   }
@@ -242,8 +254,30 @@ const ProductTable = () => {
       ...prevFormVar,
       editState: false,
       modalTitle: 'Add Products',
+      catId: '',
+      subCatId: '',
+      title: '',
+      warrentydays: 0,
+      warrentymonth: 'Day',
+      returnday: 0,
+      gstbill: 'false',
+      freeShipping: 'false',
+      bestSeller: 'false',
+      length: '',
+      breadth: '',
+      height: '',
+      ACTUAL_WEIGHT: null,
+      VOLUMETRIC_WEIGHT: '',
+      shortDesc: '',
+      desc: '',
+      price: '',
+      discountedPrice: '',
+      discountedPercentage: '',
+      selectedColor: '#000000',
+      availability: '',
+      skuid: '',
     }))
-  } 
+  }
 
   const AddBulkUploadModal = () => {
     dispatch(isOpenBulkModal(true))
@@ -351,57 +385,60 @@ const ProductTable = () => {
       return null
     }
     setSubmit(false)
+    const data = {
+      title: formVar.title,
+      brandId: formVar.brandId,
+      shortDesc: formVar.shortDesc,
+      desc: formVar.desc,
+      warranty: formVar.warrentydays,
+      warrantyIn: formVar.warrentymonth,
+      returnInDays: formVar.returnday,
+      returnAvailable: returnAvailable,
+      freeShipping: formVar.freeShipping,
+      coupan: "",
+      minFreeShipping: 0,
+      gstBillAvailable: formVar.gstbill,
+      bestSeller: formVar.gstbill,
+      ACTUAL_WEIGHT: JSON.parse(formVar.ACTUAL_WEIGHT),
+      VOLUMETRIC_WEIGHT: JSON.parse(formVar.VOLUMETRIC_WEIGHT),
+      LENGTH: parseInt(formVar.length),
+      BREADTH: parseInt(formVar.breadth),
+      HEIGHT: parseInt(formVar.height),
+      category: [
+        {
+          categoryId: formVar.catId,
+        }
+      ],
+      productVariant: [
+        {
+          name: formVar.selectedColor,
+          price: formVar.price,
+          discount: formVar.discountedPercentage,
+          discountedPrice: formVar.discountedPrice,
+          availability: formVar.availability,
+          sku: formVar.skuid,
+        }
+      ]
+      , 
+      
+      subCategory: selectedsubCatOption ? [{ subCategoryId: selectedsubCatOption }] : [],
+
+      // subCategory: [
+        
+      //   {
+      //     subCategoryId: selectedsubCatOption
+      //   }
+
+      // ]
+    }
     if (formVar.editState) {
-      console.log(formVar);
-      // dispatch(updateBrand({ id: formVar.brandId, name: brandsName }))
-    } else {
-      const data = {
-        "title": formVar.title,
-        "brandId": formVar.brandId,
-        "shortDesc": formVar.shortDesc,
-        "desc": formVar.desc,
-        "coupan": "",
-        "warranty": formVar.warrentydays,
-        "warrantyIn": formVar.warrentymonth,
-        "returnInDays": formVar.returnday,
-        "returnAvailable": returnAvailable,
-        "freeShipping": formVar.freeShipping,
-        "minFreeShipping": 0,
-        "gstBillAvailable": formVar.gstbill,
-        "bestSeller": formVar.gstbill,
-        "ACTUAL_WEIGHT": formVar.actualWeight,
-        "VOLUMETRIC_WEIGHT": formVar.volumetricWeight,
-        "LENGTH": formVar.length,
-        "BREADTH": formVar.breadth,
-        "HEIGHT": formVar.height,
-        "category": [
-          {
-            "categoryId": selectedCatOption
-          }
-        ],
-        "productVariant": [
-          {
-            "name": formVar.selectedColor,
-            "price": formVar.price,
-            "discount": formVar.discountedPercentage,
-            "discountedPrice": formVar.discountedPrice,
-            "availability": formVar.availability,
-            "sku": formVar.skuid,
-          }
-        ]
-        , "subCategory": [
-          {
-            "subCategoryId": selectedsubCatOption
-          }
-
-        ]
-      }
       console.log(data);
-
+      dispatch(updateProductsData(formVar.brandId, { data }))
+    } else {
       dispatch(addProduct(data))
     }
   }
- 
+
 
   const TitleValid = () => {
     if (!formVar.title) {
@@ -456,12 +493,12 @@ const ProductTable = () => {
   }
 
   const actualWeightValid = () => {
-    if (!formVar.actualWeight) {
+    if (!formVar.ACTUAL_WEIGHT) {
       return "Actual Weight is required";
     }
   }
   const volumetricWeightValid = () => {
-    if (!formVar.volumetricWeight) {
+    if (!formVar.VOLUMETRIC_WEIGHT) {
       return "Volumetric Weight is required";
     }
   }
@@ -481,12 +518,12 @@ const ProductTable = () => {
     }
   }
   const availabilityValid = () => {
-    if (!formVar.height) {
+    if (!formVar.availability) {
       return "Availibility is required";
     }
   }
   const skuidValid = () => {
-    if (!formVar.height) {
+    if (!formVar.skuid) {
       return "Sku Id is required";
     }
   }
@@ -639,12 +676,8 @@ const ProductTable = () => {
                             <Edit onClick={(e) => EditToggleModal(item)} />
                             <div className="tooltipCustom">Edit</div>
                           </div>
-                          {/* <div className='cursor-pointer font-success action-icon'>
-                            <Image onClick={(e) => ImageEditModal(item)} />
-                            <div className="tooltipCustom">Update Images</div>
-                          </div> */}
-                          <div className='cursor-pointer bg-light-info font-info action-icon' onClick={(e) => navigate(item.id)}>
-                            <AlignJustify />
+                          <div className='cursor-pointer font-success action-icon' onClick={(e) => navigate(item.id)}>
+                            <Image />
                             <div className="tooltipCustom">Image List</div>
                           </div>
                           <div className='cursor-pointer action-icon'>
@@ -685,7 +718,7 @@ const ProductTable = () => {
       <CommonModal isOpen={storeVar.isOpenBulkModal} title={"Upload Zip File"} toggler={bulkToggle} >
         <Form>
           <FormGroup>
-           
+
             <Label className="col-form-label" for="recipient-name">Zip</Label>
             <Dropzone
               className='dropzone dz-clickable'
@@ -720,7 +753,7 @@ const ProductTable = () => {
               <Col>
                 <Label className="col-form-label" for="recipient-name">Brand</Label>
                 <Input className="form-control form-control-inverse btn-square" name="select" type="select"
-                  value={selectedBrandOption} onChange={handleaddbrandSelectChange}>
+                  value={formVar.brandId} onChange={(e) => setFormVar((prevFormVar) => ({ ...prevFormVar, brandId: e.target.value }))}>
                   <option value="">Select Brand</option>
                   {brandsVar?.brandData?.map((item, index) => (
                     <option key={item.id} value={item.id}>
@@ -742,7 +775,7 @@ const ProductTable = () => {
               <Col>
                 <Label className="col-form-label" for="recipient-name">Category</Label>
                 <Input className="form-control form-control-inverse btn-square" name="select" type="select"
-                  value={selectedCatOption} onChange={handleSelectCatChange}>
+                  value={formVar.catId} onChange={(e) => setFormVar((prevFormVar) => ({ ...prevFormVar, catId: e.target.value }))}>
                   <option value="">Select Category</option>
                   {catVar?.categoryData?.map((item, index) => (
                     <option key={item.id} value={item.id}>
@@ -754,7 +787,7 @@ const ProductTable = () => {
               <Col>
                 <Label className="col-form-label" for="recipient-name">SubCategory</Label>
                 <Input className="form-control form-control-inverse btn-square" name="select" type="select"
-                  value={selectedsubCatOption} onChange={handleaSelectSubCatChange}>
+                  value={formVar.subCatId} onChange={(e) => setFormVar((prevFormVar) => ({ ...prevFormVar, subCatId: e.target.value }))}>
                   <option value="">Select Sub Category</option>
                   {subcatVar?.subCategoryData?.map((item, index) => (
                     <option key={item.id} value={item.id}>
@@ -778,7 +811,7 @@ const ProductTable = () => {
               </Col>
               <Col>
                 <Label className="col-form-label" for="recipient-name">Discounted Price</Label>
-                <Input className="form-control" type="text" onInput={(e) => e.target.value = e.target.value.replace(/[^0-9]/g, "").replace(" ", "").slice(0, 6)} onChange={handleDiscountedPriceChange} value={formVar.discountedPrice} disabled/>
+                <Input className="form-control" type="text" onInput={(e) => e.target.value = e.target.value.replace(/[^0-9]/g, "").replace(" ", "").slice(0, 6)} onChange={handleDiscountedPriceChange} value={formVar.discountedPrice} disabled />
               </Col>
             </Row>
             <Row>
@@ -913,7 +946,7 @@ const ProductTable = () => {
               </Col>
               <Col>
                 <Label className="col-form-label" for="recipient-name">Actual Weight in Grams</Label>
-                <Input className="form-control" type="text" onChange={(e) => setFormVar((prevFormVar) => ({ ...prevFormVar, actualWeight: e.target.value }))} onInput={(e) => e.target.value = e.target.value.replace(/[^0-9]/g, "").replace(" ", "").slice(0, 6)} value={formVar.actualWeight} />
+                <Input className="form-control" type="text" onChange={(e) => setFormVar((prevFormVar) => ({ ...prevFormVar, ACTUAL_WEIGHT: e.target.value }))} onInput={(e) => e.target.value = e.target.value.replace(/[^0-9]/g, "").replace(" ", "").slice(0, 6)} value={formVar.ACTUAL_WEIGHT} />
 
               </Col>
             </Row>
@@ -927,7 +960,7 @@ const ProductTable = () => {
             <Row>
               <Col>
                 <Label className="col-form-label" for="recipient-name">Volumetric Weight in Grams</Label>
-                <Input className="form-control" type="text" onChange={(e) => setFormVar((prevFormVar) => ({ ...prevFormVar, volumetricWeight: e.target.value }))} onInput={(e) => e.target.value = e.target.value.replace(/[^0-9]/g, "").replace(" ", "").slice(0, 6)} value={formVar.volumetricWeight} />
+                <Input className="form-control" type="text" onChange={(e) => setFormVar((prevFormVar) => ({ ...prevFormVar, VOLUMETRIC_WEIGHT: e.target.value }))} onInput={(e) => e.target.value = e.target.value.replace(/[^0-9]/g, "").replace(" ", "").slice(0, 6)} value={formVar.VOLUMETRIC_WEIGHT} />
 
               </Col>
               <Col>
@@ -965,11 +998,11 @@ const ProductTable = () => {
               </Col>
             </Row>
             <Label className="col-form-label" for="recipient-name">Short Description</Label>
-            <textarea className='form-control' name='description' rows='2' onChange={(e) => setFormVar((prevFormVar) => ({ ...prevFormVar, shortDesc: e.target.value }))} value={formVar.answer} />
+            <textarea className='form-control' name='description' rows='2' onChange={(e) => setFormVar((prevFormVar) => ({ ...prevFormVar, shortDesc: e.target.value }))} value={formVar.shortDesc} />
             {submit && shortDescValid() ? <span className='d-block font-danger'>{shortDescValid()}</span> : ""}
 
             <Label className="col-form-label" for="recipient-name">Description</Label>
-            <textarea className='form-control' name='description' rows='3' onChange={(e) => setFormVar((prevFormVar) => ({ ...prevFormVar, desc: e.target.value }))} value={formVar.answer} />
+            <textarea className='form-control' name='description' rows='3' onChange={(e) => setFormVar((prevFormVar) => ({ ...prevFormVar, desc: e.target.value }))} value={formVar.desc} />
             {submit && DescValid() ? <span className='d-block font-danger'>{DescValid()}</span> : ""}
 
 

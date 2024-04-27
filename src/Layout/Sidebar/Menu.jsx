@@ -42,7 +42,7 @@ export const MENUITEMS = [
         menucontent: "Banners",
         active: false,
         children: [
-          { path: `${process.env.PUBLIC_URL}/homepage`, icon: "banner", type: "link", active: false, title: "HomePage" },
+          { path: `${process.env.PUBLIC_URL}/homepage`, icon: "banner", activeTitle: "homepage", type: "link", active: false, title: "Home Page" },
           { path: `${process.env.PUBLIC_URL}/phonecover`, icon: "slider", type: "link", active: false, title: "PhoneCover" },
           { path: `${process.env.PUBLIC_URL}/phoneglass`, icon: "faqs", type: "link", active: false, title: "PhoneGlass" },
         ]

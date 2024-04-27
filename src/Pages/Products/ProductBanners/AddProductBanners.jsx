@@ -8,7 +8,7 @@ import CommonModal from '../../../Components/Modals/modal';
 import Dropzone from 'react-dropzone-uploader';
 import NoImage from '../../../assets/images/noimage.png';
 
-import { fetchProductImage, addProductImage, statusDeleteProduct, addBrand, updateBrand, statusToggle, statusUpdateBrandStatus, statusDeleteBrandStatus, isOpenModal, ModalToggle, isOpenStatusModal, isImageOpenModal, ImagestatusToggle, updateImageBrands } from '../../../store/productImageSlice';
+import { fetchProductImage, addProductImage, statusDeleteProduct, addBrand, updateBrand, statusToggle, statusUpdateBrandStatus, statusDeleteBrandStatus, isOpenModal, ModalToggle, isOpenStatusModal, isImageOpenModal, ImagestatusToggle, updateImageBrands, addProductImageUrl } from '../../../store/productImageSlice';
 import SweetAlert from 'sweetalert2';
 
 const AddProductBanners = () => {
@@ -18,11 +18,11 @@ const AddProductBanners = () => {
   const location = useLocation();
   const toggle = () => dispatch(ModalToggle());
   const Imagetoggle = () => dispatch(ImagestatusToggle());
-  const statusModalToggle = () => dispatch(statusToggle());
-  const [brandsName, setBrandsName] = useState("");
+  const [url, setUrl] = useState("");
   const [stateStatus, setStateStatus] = useState('ACTIVE');
   const [submit, setSubmit] = useState(false);
-  const [productId, setProductId] =useState("")
+  
+  const [productId, setProductId] = useState("")
   const [formVar, setFormVar] = useState({
     keyword: '',
     limit: 10,
@@ -63,46 +63,19 @@ const AddProductBanners = () => {
         }
       });
   }
-  const ImageEditModal = (data) => {
-    console.log(data);
-    dispatch(isImageOpenModal(true))
-    setFormVar((prevFormVar) => ({
-      id: data.id,
-      modalTitle: 'Update Image',
-    }))
-  }
+
   const ImageAddModal = (data) => {
     console.log(data);
     dispatch(isImageOpenModal(true))
-    setFormVar((prevFormVar) => ({
-      id: data.id,
-      modalTitle: 'Add Image',
-    }))
   }
 
-  const handleInputChange = (e) => {
-    setFormVar((prevFormVar) => ({ ...prevFormVar, status: e.target.value }))
-    dispatch(fetchProductImage(formVar.limit, formVar.offset, e.target.value, formVar.keyword))
-  };
-  const EditToggleModal = (data) => {
+  const UrlAddModal = (data) => {
+    console.log(data);
     dispatch(isOpenModal(true))
-    setFormVar((prevFormVar) => ({
-      ...prevFormVar,
-      editState: true,
-      brandId: data.id,
-      modalTitle: 'Edit Brand'
-    }))
-    setBrandsName(data.name)
   }
-  const AddToggleModal = () => {
-    dispatch(isOpenModal(true))
-    setFormVar((prevFormVar) => ({
-      ...prevFormVar,
-      editState: false,
-      modalTitle: 'Add Brand',
-    }))
-    setBrandsName('')
-  }
+  
+
+
   const submitImage = () => {
     if (filesValid()) {
       setSubmit(true)
@@ -117,6 +90,23 @@ const AddProductBanners = () => {
       return "Files is required";
     }
   }
+
+
+
+  const submitImageVieo = () => {
+    if (urlValid()) {
+      setSubmit(true)
+      return null
+    }
+    setSubmit(false)
+    dispatch(addProductImageUrl(productId, url))
+  }
+  const urlValid = () => {
+    if (!url) {
+      return "Url is required";
+    }
+  }
+  
 
   // called every time a file's `status` changes
   const handleChangeStatus = ({ meta, file }, status) => {
@@ -147,15 +137,17 @@ const AddProductBanners = () => {
         <Card>
           <CardHeader>
             <Row>
-              <Col md="4">
+              <Col md="5">
               </Col>
-              <Col md="4">
-                {/* <Nav tabs className="border-tab"> */}
-
-                {/* </Nav> */}
+              
+              <Col md="4" className='d-flex justify-content-end align-items-center'>
+                <div className="text-end border-2">
+                  <Btn attrBtn={{ color: 'info-gradien', size: 'sm', onClick: UrlAddModal }}>
+                    Add URL
+                  </Btn>
+                </div>
               </Col>
               <Col md="3" className='d-flex justify-content-end align-items-center'>
-
                 <div className="text-end border-2">
                   <Btn attrBtn={{ color: 'info-gradien', size: 'sm', onClick: ImageAddModal }}>
                     Add Images
@@ -165,6 +157,35 @@ const AddProductBanners = () => {
             </Row>
 
           </CardHeader>
+          <div className='table-responsive'>
+            <Table hover={true} className='table-border-horizontal table-light'>
+              <thead>
+                <tr>
+                  <th scope='col'>Sl.No</th>
+                  <th scope='col'>URL</th>
+                  <th scope='col'>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {storeVar?.brandData?.productImage?.map((item, index) => (
+                  <tr key={item.id}>
+                    <th scope='row'>{index + 1}</th>
+                    <td className={`w-25 ${item.image ? 'with-image' : 'no-image'}`}>
+                      {item.file && <img className='w-80 h-5-r' src={item.file} alt="" />}
+                    </td>
+                    <td>
+                      <div className='d-flex gap-2'>
+                        <div className='cursor-pointer font-danger action-icon'>
+                          <Trash2 onClick={(e) => BannerDelete(item)} />
+                          <div className="tooltipCustom">Delete</div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </div>
           <div className='table-responsive'>
             <Table hover={true} className='table-border-horizontal table-light'>
               <thead>
@@ -196,7 +217,7 @@ const AddProductBanners = () => {
           </div>
         </Card>
       </Col>
-      <CommonModal isOpen={storeVar.isImageOpenModal} title={formVar.modalTitle} toggler={Imagetoggle} >
+      <CommonModal isOpen={storeVar.isImageOpenModal} title={"Add Images"} toggler={Imagetoggle} >
         <Form>
           <FormGroup>
             {
@@ -226,6 +247,19 @@ const AddProductBanners = () => {
         <ModalFooter>
           <Btn attrBtn={{ color: 'secondary', onClick: Imagetoggle }} >Close</Btn>
           <Btn attrBtn={{ color: 'primary', onClick: submitImage }}>Save Changes</Btn>
+        </ModalFooter>
+      </CommonModal>
+      <CommonModal isOpen={storeVar.isOpenModal} title={"Add Video URL"} toggler={toggle} >
+        <Form>
+          <FormGroup>
+            <Label className="col-form-label" for="recipient-name">URL</Label>
+            <Input className="form-control" type="text" placeholder='Add Video Url' onChange={(e) => setUrl(e.target.value)} value={url} />
+            {submit && urlValid() ? <span className='d-block font-danger'>{urlValid()}</span> : ""}
+          </FormGroup>
+        </Form>
+        <ModalFooter>
+          <Btn attrBtn={{ color: 'secondary', onClick: toggle }} >Close</Btn>
+          <Btn attrBtn={{ color: 'primary', onClick: submitImageVieo }}>Save Changes</Btn>
         </ModalFooter>
       </CommonModal>
     </Fragment>
