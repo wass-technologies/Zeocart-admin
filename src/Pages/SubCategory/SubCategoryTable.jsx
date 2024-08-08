@@ -55,7 +55,7 @@ const SubCategoryTable = () => {
   };
 
   const pageChange = (page) => {
-    console.log(page);
+
     const offset = formVar.limit * (page - 1)
     setFormVar((prevFormVar) => ({
       ...prevFormVar,
@@ -75,7 +75,7 @@ const SubCategoryTable = () => {
     dispatch(getsubCategory(formVar.limit, formVar.offset, e.target.value, selectedOption, formVar.keyword))
   };
   const EditToggleModal = (data) => {
-    console.log(data);
+
     dispatch(isOpenModal(true))
     setFormVar((prevFormVar) => ({
       ...prevFormVar,
@@ -119,7 +119,7 @@ const SubCategoryTable = () => {
       return null
     }
     setSubmit(false)
-    console.log(formVar);
+
     if (formVar.editState) {
       dispatch(updatesubCategory({ id: formVar.id, name: formVar.name, categoryId: formVar.addCatId }))
     } else {
@@ -131,7 +131,7 @@ const SubCategoryTable = () => {
   }
 
   const degreeValid = () => {
-    if (!formVar.addCatId) {
+    if (!formVar.name) {
       return "Sub Category name is required";
     }
   }
@@ -172,7 +172,7 @@ const SubCategoryTable = () => {
       setSubmit(true)
       return null
     }
-    console.log(formVar);
+
 
     setSubmit(false)
     dispatch(updateImageSubCategory(formVar.id, formVar.bannerFile))
@@ -336,7 +336,7 @@ const SubCategoryTable = () => {
             <Col md="12">
               <div>
                 <Input className="form-control form-control-inverse btn-square" name="select" type="select"
-                  value={selectedCatOption} onChange={handleaddSelectChange}>
+                  value={formVar.addCatId} onChange={handleaddSelectChange}>
                   {formVar.addCatId ? (
                     <option value={formVar.addCatId}>
                       {catVar?.categoryData.find(item => item.id === formVar.addCatId)?.name}

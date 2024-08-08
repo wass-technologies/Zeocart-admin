@@ -32,6 +32,9 @@ export const subCategorySlice = createSlice({
         state.subCategoryData[objIndex]=payload
       }
     },
+    pushSubCategoryData(state, { payload }) {
+      state.subCategoryData.push(payload)
+    },
     isOpenModal(state, { payload }) {
       state.isOpenModal = payload
     },
@@ -53,7 +56,7 @@ export const subCategorySlice = createSlice({
   }
 })
 
-export const { setsubCategoryData, isOpenModal, ModalToggle, isOpenStatusModal,statusToggle, updatesubCategoryData, isImageOpenModal } = subCategorySlice.actions;
+export const { setsubCategoryData, isOpenModal, ModalToggle, isOpenStatusModal,statusToggle, updatesubCategoryData, pushSubCategoryData, isImageOpenModal } = subCategorySlice.actions;
 
 export default subCategorySlice.reducer;
 
@@ -83,7 +86,9 @@ export function addSubCategory(payload) {
       await service.addSubCategory(payload).then(
         (response) => {
           dispatch(setLoading(false))
-          dispatch(ModalToggle())
+          dispatch(ModalToggle());
+          response.data['name']=payload.name
+          dispatch(pushSubCategoryData(response.data))
           successHandler('Added Successfully')
         }, (error) => {
           dispatch(setLoading(false))
@@ -102,7 +107,6 @@ export function deleteSubCategoryStatus(id, status) {
       dispatch(setLoading(true))
       await service.statusUpdateSubCAtegory(id, status).then(
         (response) => {
-          console.log(response.data);
           dispatch(updatesubCategoryData(response.data))
           dispatch(setLoading(false))
           successHandler('Deactivated Successfully')
@@ -123,7 +127,6 @@ export function statusSubCatDegree(id, status) {
       dispatch(setLoading(true))
       await service.statusUpdateSubCAtegory(id, status).then(
         (response) => {
-          console.log(response.data);
           dispatch(updatesubCategoryData(response.data))
           dispatch(setLoading(false))
           dispatch(statusToggle())

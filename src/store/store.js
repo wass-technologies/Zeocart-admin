@@ -18,7 +18,7 @@ import blogReducer from './blogSlice';
 import productReducer from './productSlice';
 import productImageReducer from './productImageSlice';
 import paymentReducer from './paymentSlice';
-
+import productKeywordReducer from './productKeywordSlice';
 
 export const store = configureStore({
   reducer: {
@@ -34,9 +34,10 @@ export const store = configureStore({
     page: pagesReducer,
     blog : blogReducer,
     products: productReducer,
+    productImage: productImageReducer,
+    productKeyword: productKeywordReducer,
     subcategory : subcategoryReducer,
     orders: ordersReducer,
-    productImage: productImageReducer,
     slider:sliderReducer,
     users:userReducer,
     staff:staffReducer,

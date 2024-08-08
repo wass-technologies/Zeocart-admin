@@ -80,7 +80,6 @@ const SpecializationTable = () => {
     }))
   }
   const imageToggleModal = (data) => {
-    console.log(data);
     dispatch(isOpenImageModal(true))
     setFormVar((prevFormVar) => ({
       ...prevFormVar,

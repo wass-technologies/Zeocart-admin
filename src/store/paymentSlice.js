@@ -43,7 +43,6 @@ export function paymentsData(keyword, limit, offset, fromDate, toDate, status, p
             await service.paymentList(keyword, limit, offset, fromDate, toDate, status, payType).then(
                 (response) => {
                     if (response.data) {
-                        console.log(response);
                         dispatch(getpayment(response.data))
                         dispatch(setLoading(false))
                     }
@@ -65,7 +64,6 @@ export function paymentsDataById(id) {
             await service.paymentDetails(id).then(
                 (response) => {
                     if (response.data) {
-                        console.log(response);
                         dispatch(getpaymentDetails(response.data))
                         dispatch(setLoading(false))
                     }

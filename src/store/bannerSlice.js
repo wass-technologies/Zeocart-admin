@@ -28,6 +28,8 @@ export const BannerSlice = createSlice({
       state.bannerData = payload.result
     },
     setBannerCopyData(state, { payload }) {
+      console.log(payload);
+      
       state.bannerDataCopy = payload.result
     },
     updatebannerData(state, { payload }) {
@@ -65,7 +67,7 @@ export function getBanner(limit, offset, status, keyword, id) {
         (response) => {
           dispatch(setLoading(false))
           dispatch(setBannerData(response.data))
-          console.log(response.data);
+        
         }, (error) => {
           dispatch(setLoading(false))
           errorHandler(error.response)
@@ -84,7 +86,6 @@ export function getBannerCopy(limit, offset, status, keyword, id) {
         (response) => {
           dispatch(setLoading(false))
           dispatch(setBannerCopyData(response.data))
-          console.log(response.data);
         }, (error) => {
           dispatch(setLoading(false))
           errorHandler(error.response)
@@ -102,7 +103,6 @@ export function updateBannerUrl(bannerId, redirectId) {
     try {
       await service.updateBannerUrl(bannerId, redirectId).then(
         (response) => {
-          console.log(response);
           dispatch(updatebannerData(response.data));
           dispatch(ModalToggle())
           dispatch(setLoading(false))
@@ -136,10 +136,14 @@ export function updateBanner(id, file) {
           successHandler('Updated Successfully')
         }, (error) => {
           dispatch(setLoading(false))
+          // console.log(error);
           errorHandler(error.response)
         }
       );
     } catch (err) {
+      // console.log(err);
+      // errorHandler()
+
     }
   }
 }

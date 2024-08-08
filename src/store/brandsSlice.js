@@ -17,6 +17,8 @@ const initialState = {
   isOpenModal: false,
   isStatusOpenModal: false,
   isImageOpenModal: false,
+  brandData: [],
+  totalBrands: '',
 
 };
 
@@ -25,7 +27,8 @@ export const brandsSlice = createSlice({
   initialState,
   reducers: {
     setbrand(state, { payload }) { 
-      state.brandData = payload;
+      state.brandData = payload.result;
+      state.totalBrands = payload.total;
     },
     updateBrandsData(state, { payload }) {
       const objIndex = state.brandData.findIndex((obj) => obj.id === payload.id);
@@ -57,13 +60,13 @@ export const brandsSlice = createSlice({
 export const { setbrand, updateBrandsData, DeleteBrandsData, isOpenModal, isImageOpenModal, ModalToggle, setFaqsSpecializationData, isOpenStatusModal, statusToggle, ImagestatusToggle } = brandsSlice.actions;
 export default brandsSlice.reducer;
 
-export function fetchbrand(limit, keyword, offset, status) {
+export function fetchbrand(limit, offset, keyword, status) {
   return async function fetchbrandThunk(dispatch, getState) {
     try {
-      await service.brandData(limit, keyword, offset, status).then(
+      await service.brandData(limit, offset, keyword, status).then(
         (response) => {
-          console.log(response);
-          dispatch(setbrand(response.data.result));
+          
+          dispatch(setbrand(response.data));
         }, (error) => {
         }
       );
@@ -74,13 +77,13 @@ export function fetchbrand(limit, keyword, offset, status) {
   }
 }
 export function addBrand(payload) {
-  console.log(payload);
+  
   return async function addBrandsThunk(dispatch) {
     try {
       dispatch(setLoading(true))
       await service.createBrands(payload).then(
         (response) => {
-          console.log(response.data);
+          
           dispatch(updateBrandsData(response.data))
           dispatch(setLoading(false))
           dispatch(ModalToggle())
@@ -102,7 +105,7 @@ export function updateBrand(payload) {
       dispatch(setLoading(true))
       await service.updateBrands(payload.id, payload.name).then(
         (response) => {
-          console.log(response.data);
+          
           dispatch(updateBrandsData(response.data))
           dispatch(setLoading(false))
           dispatch(ModalToggle())
@@ -126,7 +129,7 @@ export function updateImageBrands(id, file) {
       dispatch(isImageOpenModal())
       await service.updateBrandsImage(id, file).then(
         (response) => {
-          console.log(response.data);
+          
           dispatch(updateBrandsData(response.data))
           dispatch(setLoading(false))
           successHandler('Updated Successfully')
@@ -147,7 +150,7 @@ export function statusUpdateBrandStatus(payload) {
       dispatch(setLoading(true))
       await service.statusUpdateBrands(payload.id, payload.status).then(
         (response) => {
-          console.log(response.data);
+          
           dispatch(updateBrandsData(response.data))
           dispatch(setLoading(false))
           dispatch(statusToggle())
@@ -169,7 +172,7 @@ export function statusDeleteBrandStatus(id, status) {
       dispatch(setLoading(true))
       await service.statusUpdateBrands(id, status).then(
         (response) => {
-          console.log(response.data);
+          
           dispatch(updateBrandsData(response.data))
           dispatch(setLoading(false))
           successHandler('Deleted Successfully')

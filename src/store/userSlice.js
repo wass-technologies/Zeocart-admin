@@ -34,13 +34,11 @@ export const { setUserData, } = userSlice.actions;
 export default userSlice.reducer;
 
 export function getUser(limit, offset, keyword) {
-  console.log(keyword);
   return async function getUserThunk(dispatch) {
     dispatch(setLoading(true))
     try {
       await service.getUser(limit, offset, keyword).then(
         (response) => {
-          console.log(response.data);
           dispatch(setLoading(false))
           dispatch(setUserData(response.data))
         }, (error) => {

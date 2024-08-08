@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import CommonModal from '../../Components/Modals/modal';
 import Dropzone from 'react-dropzone-uploader';
 import NoImage from '../../assets/images/noimage.png';
-import { fetchblogs, isOpenModal, isOpenStatusModal, statusToggle, statusUpdateBlogStatus, ModalToggle, updateBlogs, addBlogs, isImageOpenModal, updateImageBlogs } from '../../store/blogSlice';
+import { fetchblogs, isOpenModal, isOpenStatusModal, statusToggle, statusUpdateBlogStatus, ModalToggle, updateBlogs, addBlogs, isImageOpenModal, updateImageBlogs, statusDeleteBlogsStatus } from '../../store/blogSlice';
 import Pagination from '../../Components/Pagination/Pagination';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
@@ -83,9 +83,7 @@ const Blogs = () => {
     })
       .then((result) => {
         if (result.value) {
-          console.log(data);
-          // dispatch(statusDeleteBrandStatus(data.id, 'DELETED'))
-
+          dispatch(statusDeleteBlogsStatus(data.id, 'DELETED'))
         }
       });
   }
@@ -97,7 +95,6 @@ const Blogs = () => {
     }))
   }
   const ImageEditMiddleModal = (data) => {
-    console.log(data);
     dispatch(isImageOpenModal(true))
     setFormVar((prevFormVar) => ({
       id: data.id,
@@ -105,7 +102,6 @@ const Blogs = () => {
     }))
   }
   const ImageEditTopModal = (data) => {
-    console.log(data);
     dispatch(isImageOpenModal(true))
     setFormVar((prevFormVar) => ({
       id: data.id,
@@ -119,7 +115,6 @@ const Blogs = () => {
     dispatch(fetchblogs(formVar.limit, formVar.offset, e.target.value, formVar.keyword))
   };
   const EditToggleModal = (data) => {
-    console.log(data);
     dispatch(isOpenModal(true))
     setFormVar((prevFormVar) => ({
       ...prevFormVar,
@@ -149,7 +144,6 @@ const Blogs = () => {
     setStateStatus(event.target.value)
   }
   const statusToggleModal = (data) => {
-    console.log(data);
     dispatch(isOpenStatusModal(true))
     setStateStatus(data.status)
     setFormVar((prevFormVar) => ({
@@ -162,7 +156,6 @@ const Blogs = () => {
       setSubmit(true)
       return null
     }
-    console.log(formVar);
 
     setSubmit(false)
     dispatch(updateImageBlogs(formVar.id, formVar.bannerFile, "image1"))
@@ -172,7 +165,6 @@ const Blogs = () => {
       setSubmit(true)
       return null
     }
-    console.log(formVar);
 
     setSubmit(false)
     dispatch(updateImageBlogs(formVar.id, formVar.bannerFile, "image2"))
@@ -182,7 +174,6 @@ const Blogs = () => {
       setSubmit(true)
       return null
     }
-    console.log(formVar);
 
     setSubmit(false)
     dispatch(updateImageBlogs(formVar.id, formVar.bannerFile, "image3"))
@@ -426,6 +417,14 @@ const Blogs = () => {
                 onChange={(event, editor) => {
                   onChangetop(editor);
                 }}
+                // onChange={(event, editor) => {
+                //   const data = editor.getData();
+                //   if (data.length > 5000) {
+                //     editor.setData(data.substring(0, 5000)); // Only set data if it exceeds the max length
+                //   } else {
+                //     onChangedesc(editor); // Call your function only if content is within limits
+                //   }
+                // }}
                 onBlur={(event, editor) => {
                 }}
                 onFocus={(event, editor) => {
@@ -444,6 +443,14 @@ const Blogs = () => {
                 onChange={(event, editor) => {
                   onChangedesc(editor);
                 }}
+                // onChange={(event, editor) => {
+                //   const data = editor.getData();
+                //   if (data.length > 5000) {
+                //     editor.setData(data.substring(0, 5000)); // Only set data if it exceeds the max length
+                //   } else {
+                //     onChangedesc(editor); // Call your function only if content is within limits
+                //   }
+                // }}
                 onBlur={(event, editor) => {
                 }}
                 onFocus={(event, editor) => {

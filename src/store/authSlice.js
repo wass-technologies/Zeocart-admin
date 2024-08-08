@@ -22,7 +22,6 @@ export const authSlice = createSlice({
     initialState,
     reducers:{
       loginSucces(state, {payload}) {
-       console.log(payload);
        localStorage.setItem("accessToken", payload.token);
        localStorage.setItem("login", true);
        localStorage.setItem("authenticated", true);
@@ -31,7 +30,6 @@ export const authSlice = createSlice({
        successHandler("Successfully logged in!..")
        },
        loginFailed(state, {payload}) {
-        console.log(payload);
           let result = Array.isArray(payload.message);
           if (result) {
             toast.error(payload.message[0]);

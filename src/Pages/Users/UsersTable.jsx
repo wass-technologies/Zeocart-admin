@@ -45,14 +45,12 @@ const UsersTable = () => {
     dispatch(getUser(formVar.limit, formVar.offset, formVar.keyword, formVar.fromDate, formVar.toDate))
   } 
   const pageChange = (page) => {
-    console.log(page);
     const offset = formVar.limit * (page - 1)
     setFormVar((prevFormVar) => ({
       ...prevFormVar,
       currentPage: page,
       offset: offset
     }))
-    console.log({ offset });
     storeVar.storeVar.userData=[]
     dispatch(getUser(formVar.limit, offset, formVar.keyword, formVar.fromDate, formVar.toDate))
   };

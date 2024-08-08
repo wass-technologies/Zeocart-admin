@@ -96,7 +96,7 @@ export function getCouponData(limit, offset, status, usertype, type) {
     try {
       await service.getCouponsData(limit, offset, status, usertype, type).then(
         (response) => {
-          console.log(response.data);
+          
           dispatch(setLoading(false))
           dispatch(setCouponsData(response.data))
         }, (error) => {
@@ -112,7 +112,7 @@ export function getCouponData(limit, offset, status, usertype, type) {
 
 export function addCoupon(payload) {
   return async function addCouponThunk(dispatch) {
-    console.log(payload);
+    
     dispatch(setLoading(true))
     try {
       await service.addCouponData(payload).then(
@@ -132,7 +132,7 @@ export function addCoupon(payload) {
 
 
 export function updateImageAdvertisement(id, file) {
-  console.log(file);
+  
   return async function updateImageAdvertisementThunk(dispatch) {
     try {
       dispatch(setLoading(true))
@@ -198,13 +198,13 @@ export function statusUpdateCoupons(payload) {
 
 
 export function deleteAdvertisement(payload) {
-  console.log(payload);
+  
   return async function statusUpdateAdvertisementThunk(dispatch) {
     try {
       dispatch(setLoading(true))
       await service.updateAdvertisementStatus(payload.id,payload.status).then(
         (response) => {
-          console.log(response.data);
+          
           dispatch(updateadvertisementData(response.data))
           dispatch(setLoading(false))
           successHandler('Deleted Successfully')

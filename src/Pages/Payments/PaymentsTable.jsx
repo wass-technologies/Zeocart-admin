@@ -11,7 +11,6 @@ import CustomizerContext from '../../_helper/Customizer';
 
 const PaymentsTable = () => {
   const storeVar = useSelector(state => state.payment)
-  console.log(storeVar);
   const dispatch = useDispatch();
   const history = useNavigate();
   const { layoutURL } = useContext(CustomizerContext);
@@ -61,7 +60,6 @@ const PaymentsTable = () => {
   const handleDateendChange = (e) => {
     setFormVar((prevFormVar) => ({ ...prevFormVar, toDate: e.target.value }))
     dispatch(paymentsData(formVar.keyword, formVar.limit, formVar.offset, formVar.fromDate, e.target.value, formVar.status, formVar.payType))
-
   }
 
   const searchState = (e) => {
@@ -75,8 +73,7 @@ const PaymentsTable = () => {
     }, typingDelay);
     setTypingTimer(timer);
   };
-  const navigate = (data) => {
-    console.log(data);
+  const   navigate = (data) => {
     history(`/payments/paymentdetails/` + layoutURL + '?id=' + data.id)
   }
   return (
@@ -206,11 +203,11 @@ const PaymentsTable = () => {
                       }
                     </td>
                     <td>
-                    <div className='d-flex gap-2'>
-                      <div className='cursor-pointer  font-success action-icon'>
-                        <Airplay onClick={(e) => navigate(item)} />
-                        <div className="tooltipCustom">More Details</div>
-                      </div>
+                      <div className='d-flex gap-2'>
+                        <div className='cursor-pointer  font-success action-icon'>
+                          <Airplay onClick={(e) => navigate(item)} />
+                          <div className="tooltipCustom">More Details</div>
+                        </div>
                       </div>
                     </td>
                   </tr>

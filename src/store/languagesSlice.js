@@ -59,7 +59,6 @@ export function getLanguages(limit, offset, status, keyword) {
     try {
       await service.getLanguages(limit, offset, status, keyword).then(
         (response) => {
-          console.log(response.data);
           dispatch(setLoading(false))
           dispatch(setLanguagesData(response.data))
         }, (error) => {
@@ -78,7 +77,6 @@ export function addLanguages(payload) {
     try {
       await service.addLanguages(payload).then(
         (response) => {
-          console.log(response.data);
           response.data['name']=payload.name
           dispatch(pushManagerLanguagesData(response.data))
           dispatch(setLoading(false))

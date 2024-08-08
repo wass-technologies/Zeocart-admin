@@ -17,7 +17,6 @@ export const MENUITEMS = [
       { path: `${process.env.PUBLIC_URL}/products`, icon: "degree", title: "Products", type: "link" },
       { path: `${process.env.PUBLIC_URL}/orders`, icon: "degree", title: "Orders", type: "link" },
       { path: `${process.env.PUBLIC_URL}/payments`, icon: "degree", title: "Payments", type: "link" },
-      { path: `${process.env.PUBLIC_URL}/pages`, icon: "form", title: "Pages", type: "link" },
     ],
   }, 
 
@@ -31,7 +30,7 @@ export const MENUITEMS = [
   },
 
   {
-    menutitle: "Banners",
+    menutitle: "Images",
     menucontent: "Banners",
     Items: [
       {
@@ -44,9 +43,11 @@ export const MENUITEMS = [
         children: [
           { path: `${process.env.PUBLIC_URL}/homepage`, icon: "banner", activeTitle: "homepage", type: "link", active: false, title: "Home Page" },
           { path: `${process.env.PUBLIC_URL}/phonecover`, icon: "slider", type: "link", active: false, title: "PhoneCover" },
-          { path: `${process.env.PUBLIC_URL}/phoneglass`, icon: "faqs", type: "link", active: false, title: "PhoneGlass" },
+          // { path: `${process.env.PUBLIC_URL}/phoneglass`, icon: "faqs", type: "link", active: false, title: "PhoneGlass" },
         ]
       },
+      { path: `${process.env.PUBLIC_URL}/slider`, icon: "slider", type: "link", active: false, title: "Slider" },
+
     ],
   },
 
@@ -56,8 +57,9 @@ export const MENUITEMS = [
     Items: [
       { path: `${process.env.PUBLIC_URL}/advertisement`, icon: "banner", type: "link", active: false, title: "Advertisement" },
       { path: `${process.env.PUBLIC_URL}/blogs`, icon: "banner", type: "link", active: false, title: "Blogs" },
-      { path: `${process.env.PUBLIC_URL}/slider`, icon: "slider", type: "link", active: false, title: "Slider" },
       { path: `${process.env.PUBLIC_URL}/faqs`, icon: "faqs", type: "link", active: false, title: "FAQ" },
+      { path: `${process.env.PUBLIC_URL}/pages`, icon: "form", title: "Pages", type: "link" },
+
     ],
   },
 ];

@@ -152,7 +152,7 @@ g, path, circle, rect {
 }
 
 .climacon_componentWrap-sun_cloud .climacon_componentWrap_sunSpoke .climacon_component-stroke_sunSpoke:nth-child(even) {
-  animation-delay: $baseAnimationDuration / 4;
+  animation-delay: calc($baseAnimationDuration / 4);
 }
 
 /* CLOUD MOON */

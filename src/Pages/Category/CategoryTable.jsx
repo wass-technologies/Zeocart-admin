@@ -12,7 +12,6 @@ import SweetAlert from 'sweetalert2';
  
 const CategoryTable = () => {
   const storeVar = useSelector(state => state.category)
-  console.log(storeVar);
   const dispatch = useDispatch();
   const toggle = () => dispatch(ModalToggle()); 
   const statusModalToggle = () => dispatch(statusToggle());
@@ -96,7 +95,6 @@ const CategoryTable = () => {
     })
       .then((result) => {
         if (result.value) {
-          console.log(data);
           dispatch(statusDeleteCategoryStatus(data.id, 'DELETED'))
 
         }
@@ -153,11 +151,6 @@ const CategoryTable = () => {
                 </div> 
               </Col>
             </Row>
-            {/* <div className="text-end">
-              <Btn attrBtn={{ color: 'info-gradien', size: 'sm', active: false, disabled: false, outline: false  }}>
-                Add State
-              </Btn>
-            </div> */}
 
           </CardHeader>
           <div className='table-responsive'>

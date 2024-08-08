@@ -8,20 +8,18 @@ import CommonModal from '../../../Components/Modals/modal';
 import Dropzone from 'react-dropzone-uploader';
 import NoImage from '../../../assets/images/noimage.png';
 
-import { fetchProductImage, addProductImage, statusDeleteProduct, addBrand, updateBrand, statusToggle, statusUpdateBrandStatus, statusDeleteBrandStatus, isOpenModal, ModalToggle, isOpenStatusModal, isImageOpenModal, ImagestatusToggle, updateImageBrands, addProductImageUrl } from '../../../store/productImageSlice';
+import { fetchProductImage, addProductImage, statusDeleteProduct, isOpenModal, ModalToggle, isOpenStatusModal, isImageOpenModal, ImagestatusToggle, updateImageBrands, addProductImageUrl } from '../../../store/productImageSlice';
 import SweetAlert from 'sweetalert2';
 
 const AddProductBanners = () => {
   const storeVar = useSelector(state => state.productImage)
-  console.log(storeVar);
   const dispatch = useDispatch();
   const location = useLocation();
   const toggle = () => dispatch(ModalToggle());
   const Imagetoggle = () => dispatch(ImagestatusToggle());
   const [url, setUrl] = useState("");
-  const [stateStatus, setStateStatus] = useState('ACTIVE');
   const [submit, setSubmit] = useState(false);
-  
+
   const [productId, setProductId] = useState("")
   const [formVar, setFormVar] = useState({
     keyword: '',
@@ -37,6 +35,7 @@ const AddProductBanners = () => {
     brandName: '',
     bannerFile: null,
     bannerImageURL: null,
+    priority: 10,
   });
 
   useEffect(() => {
@@ -57,7 +56,7 @@ const AddProductBanners = () => {
     })
       .then((result) => {
         if (result.value) {
-          console.log(data);
+
           dispatch(statusDeleteProduct(data.id, 'DELETED'))
 
         }
@@ -65,15 +64,20 @@ const AddProductBanners = () => {
   }
 
   const ImageAddModal = (data) => {
-    console.log(data);
+    setFormVar((prevFormVar) => ({ 
+      ...prevFormVar, 
+      bannerImageURL: '', 
+      bannerFile: null,
+      priority: 10
+    }))
     dispatch(isImageOpenModal(true))
   }
 
   const UrlAddModal = (data) => {
-    console.log(data);
+
     dispatch(isOpenModal(true))
   }
-  
+
 
 
   const submitImage = () => {
@@ -83,7 +87,7 @@ const AddProductBanners = () => {
     }
 
     setSubmit(false)
-    dispatch(addProductImage(productId, formVar.bannerFile))
+    dispatch(addProductImage(productId, formVar.priority, formVar.bannerFile))
   }
   const filesValid = () => {
     if (!formVar.bannerFile) {
@@ -106,7 +110,7 @@ const AddProductBanners = () => {
       return "Url is required";
     }
   }
-  
+
 
   // called every time a file's `status` changes
   const handleChangeStatus = ({ meta, file }, status) => {
@@ -131,6 +135,9 @@ const AddProductBanners = () => {
       }))
     }
   };
+  const handlePriorityChange = (e) => {
+    setFormVar((prevFormVar) => ({ ...prevFormVar, priority: e.target.value }))
+  };
   return (
     <Fragment>
       <Col sm='12'>
@@ -139,12 +146,12 @@ const AddProductBanners = () => {
             <Row>
               <Col md="5">
               </Col>
-              
+
               <Col md="4" className='d-flex justify-content-end align-items-center'>
                 <div className="text-end border-2">
-                  <Btn attrBtn={{ color: 'info-gradien', size: 'sm', onClick: UrlAddModal }}>
+                  {/* <Btn attrBtn={{ color: 'info-gradien', size: 'sm', onClick: UrlAddModal }}>
                     Add URL
-                  </Btn>
+                  </Btn> */}
                 </div>
               </Col>
               <Col md="3" className='d-flex justify-content-end align-items-center'>
@@ -158,7 +165,7 @@ const AddProductBanners = () => {
 
           </CardHeader>
           <div className='table-responsive'>
-            <Table hover={true} className='table-border-horizontal table-light'>
+            {/* <Table hover={true} className='table-border-horizontal table-light'>
               <thead>
                 <tr>
                   <th scope='col'>Sl.No</th>
@@ -167,11 +174,11 @@ const AddProductBanners = () => {
                 </tr>
               </thead>
               <tbody>
-                {storeVar?.brandData?.productImage?.map((item, index) => (
+                {storeVar?.productURL?.map((item, index) => (
                   <tr key={item.id}>
                     <th scope='row'>{index + 1}</th>
                     <td className={`w-25 ${item.image ? 'with-image' : 'no-image'}`}>
-                      {item.file && <img className='w-80 h-5-r' src={item.file} alt="" />}
+                     {item.url}
                     </td>
                     <td>
                       <div className='d-flex gap-2'>
@@ -184,7 +191,7 @@ const AddProductBanners = () => {
                   </tr>
                 ))}
               </tbody>
-            </Table>
+            </Table> */}
           </div>
           <div className='table-responsive'>
             <Table hover={true} className='table-border-horizontal table-light'>
@@ -192,16 +199,18 @@ const AddProductBanners = () => {
                 <tr>
                   <th scope='col'>Sl.No</th>
                   <th scope='col'>Image</th>
+                  <th scope='col'>Priority</th>
                   <th scope='col'>Action</th>
                 </tr>
               </thead>
               <tbody>
-                {storeVar?.brandData?.productImage?.map((item, index) => (
+                {storeVar?.productImage?.map((item, index) => (
                   <tr key={item.id}>
                     <th scope='row'>{index + 1}</th>
                     <td className={`w-25 ${item.image ? 'with-image' : 'no-image'}`}>
                       {item.file && <img className='w-80 h-5-r' src={item.file} alt="" />}
                     </td>
+                    <th scope='row'>{item.priority}</th>
                     <td>
                       <div className='d-flex gap-2'>
                         <div className='cursor-pointer font-danger action-icon'>
@@ -227,6 +236,20 @@ const AddProductBanners = () => {
                 </div>
               </>
             }
+            <Label className="col-form-label" for="recipient-name">Priority</Label>
+            <Input
+                    className="form-control form-control-inverse btn-square"
+                    name="select"
+                    type="select"
+                    value={formVar.priority}
+                    onChange={handlePriorityChange}
+                  >
+                    {[...Array(10)].map((_, index) => (
+                      <option key={index+1} value={index+1}>
+                        {index+1}
+                      </option>
+                    ))}
+                  </Input>
             <Label className="col-form-label" for="recipient-name">Image</Label>
             <Dropzone
               className='dropzone dz-clickable'

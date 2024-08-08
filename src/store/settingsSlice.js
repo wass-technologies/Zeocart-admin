@@ -76,7 +76,6 @@ export function getSettings(limit, offset, status, keyword) {
     try {
       await service.getSettings(limit, offset, status, keyword).then(
         (response) => {
-          console.log(response.data);
           dispatch(setLoading(false))
           dispatch(setSettingsData(response.data))
         }, (error) => {
@@ -156,7 +155,6 @@ export function addSettingsBanner1(payload) {
     try {
       await service.addSettingsBanner1(payload.id,payload).then(
         (response) => {
-          console.log(response.data);
           dispatch(setLoading(false))
           dispatch(imageToggle())
           dispatch(updateSettingsBanner(response.data))
@@ -177,7 +175,6 @@ export function addSettingsBanner2(payload) {
     try {
       await service.addSettingsBanner2(payload.id,payload).then(
         (response) => {
-          console.log(response.data);
           dispatch(setLoading(false))
           dispatch(imageToggle())
           dispatch(updateSettingsBanner(response.data))

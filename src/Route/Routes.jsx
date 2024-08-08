@@ -17,20 +17,18 @@ import Staff from "../Pages/Staff";
 import Advertisement from "../Pages/Advertisements";
 import Blogs from "../Pages/Blogs/Blogs";
 import Products from "../Pages/Products/Products";
-import ProductBanner from "../Pages/Products/ProductBanners/AddProductBanners";
+import ProductBanner from "../Pages/Products/ProductBanners/";
+import ProductKeywords from "../Pages/Products/ProductKeywords";
 import Payments from "../Pages/Payments";
 import PaymentDetails from '../Pages/Payments/PaymentsDetail';
 
 export const routes = [
   { path: `${process.env.PUBLIC_URL}/dashboard/social/:layout`, Component: <Social /> },
-  // //Tables
 
-  // //Applicatiion
-
-  // User
   
   { path: `${process.env.PUBLIC_URL}/products/:layout`, Component: <Products /> },
-  { path: `${process.env.PUBLIC_URL}/product-image/:layout`, Component: <ProductBanner /> },
+  { path: `${process.env.PUBLIC_URL}/products/product-image/:layout`, Component: <ProductBanner /> },
+  { path: `${process.env.PUBLIC_URL}/products/product-keywords/:layout`, Component: <ProductKeywords /> },
   
   { path: `${process.env.PUBLIC_URL}/coupons/:layout`, Component: <Coupons /> },
   

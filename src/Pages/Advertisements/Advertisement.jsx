@@ -74,7 +74,6 @@ const Advertisement = () => {
     dispatch(isOpenStatusModal(true))
   }
   const statusEditModal = (data) => {
-    console.log(data);
     dispatch(isOpenModal(true))
     setFormVar((prevFormVar) => ({
       ...prevFormVar,
@@ -90,8 +89,6 @@ const Advertisement = () => {
 
 
   const ImageEditModal = (data) => {
-    console.log(data);
-
     dispatch(isImageOpenModal(true))
     setFormVar((prevFormVar) => ({
       ...prevFormVar,
@@ -119,7 +116,6 @@ const Advertisement = () => {
       return null
     }
     setSubmit(false)
-    console.log(formVar);
     dispatch(addAdvertisement(formVar.name, formVar.url, formVar.urlType, formVar.type))
   }
   const EditDetails = () => {
@@ -128,7 +124,6 @@ const Advertisement = () => {
       return null
     }
     setSubmit(false)
-    console.log(formVar);
     dispatch(DetailsUpdateAdvertisement(formVar.id, formVar.name, formVar.url, formVar.type, formVar.urlType))
   }
 
@@ -137,7 +132,6 @@ const Advertisement = () => {
       setSubmit(true)
       return null
     }
-    console.log(formVar);
 
     setSubmit(false)
     dispatch(updateImageAdvertisement(formVar.id, formVar.bannerFile))
@@ -154,7 +148,6 @@ const Advertisement = () => {
     })
       .then((result) => {
         if (result.value) {
-          console.log(data);
           dispatch(deleteAdvertisement({ id: data.id, status: 'DELETED' }))
 
         }

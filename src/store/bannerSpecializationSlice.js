@@ -74,7 +74,7 @@ export function getBannerSpecialization(limit, offset, keyword, bannerId) {
         (response) => {
           dispatch(setLoading(false))
           dispatch(setBannerSpecializationData(response.data))
-          console.log(response.data);
+          
         }, (error) => {
           dispatch(setLoading(false))
           errorHandler(error.response)
@@ -111,7 +111,7 @@ export function deleteBannerSpecialization(payload) {
       dispatch(setLoading(true))
       await service.deleteBannerSpecialization(payload.id).then(
         (response) => {
-          console.log(response.data);
+          
           response.data['id']=payload.id
           dispatch(setLoading(false))
           dispatch(sliceBannerSpecialization(response.data))
@@ -130,10 +130,10 @@ export function getSpecialization(limit, offset, status, keyword) {
   return async function getSpecializationThunk(dispatch) {
     dispatch(setLoading(true))
     try {
-      console.log({limit, offset, status, keyword});
+      
       await service.getSpecialization(limit, offset, status, keyword).then(
         (response) => {
-          console.log(response.data);
+          
           dispatch(setLoading(false))
           dispatch(setSpecializationData(response.data))
         }, (error) => {

@@ -12,7 +12,6 @@ import CustomizerContext from '../../_helper/Customizer';
 
 const UsersTable = () => {
   const storeVar = useSelector(state => state.users) 
-  console.log(storeVar);
   const dispatch = useDispatch(); 
   const toggle = () => dispatch(ModalToggle());
   const statusModalToggle = () => dispatch(statusToggle());

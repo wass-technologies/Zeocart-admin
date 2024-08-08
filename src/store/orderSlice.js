@@ -24,14 +24,14 @@ export const ordersSlice = createSlice({
   name: 'orders',
   initialState,
   reducers: {
-    setbrand(state, { payload }) {
+    setOrdersDAta(state, { payload }) {
       state.ordersData = payload.result;
       state.orderCount = payload.total;
     },
-    updateBrandsData(state, { payload }) {
-      const objIndex = state.ordersData.findIndex((obj) => obj.id === payload.id);
+    updateOrdersDAta(state, { payload }) {
+      const objIndex = state.ordersData.findIndex((obj) => obj.orderId === payload.id);
       if (objIndex >= 0) {
-        state.ordersData[objIndex] = payload
+        state.ordersData[objIndex].status = payload.status
       }
     },
     isOpenModal(state, { payload }) {
@@ -53,21 +53,12 @@ export const ordersSlice = createSlice({
       state.isImageOpenModal = !state.isImageOpenModal
     },
     downloadFile(state, { payload }) {
-      // const link = document.createElement('a');
-      // link.href = URL.createObjectURL(payload.pdfData);
-      // link.download = payload.fileName;
-      // document.body.append(link);
-      // link.click();
-      // link.remove();
-      // setTimeout(() => URL.revokeObjectURL(link.href), 1000);
-
+      
       if (
         window.navigator &&
         window.navigator.msSaveOrOpenBlob
       ) return window.navigator.msSaveOrOpenBlob(payload.pdfData);
 
-      // For other browsers:
-      // Create a link pointing to the ObjectURL containing the blob.
       const data = window.URL.createObjectURL(payload.pdfData);
 
       const link = document.createElement('a');
@@ -92,16 +83,16 @@ export const ordersSlice = createSlice({
   },
 });
 
-export const { setbrand, downloadFile, updateBrandsData, DeleteBrandsData, isOpenModal, isImageOpenModal, ModalToggle, setFaqsSpecializationData, isOpenStatusModal, statusToggle, ImagestatusToggle } = ordersSlice.actions;
+export const { setOrdersDAta, downloadFile, updateOrdersDAta, DeleteBrandsData, isOpenModal, isImageOpenModal, ModalToggle, setFaqsSpecializationData, isOpenStatusModal, statusToggle, ImagestatusToggle } = ordersSlice.actions;
 export default ordersSlice.reducer;
 
-export function fetchorders(limit, offset, status, keyword, paymentStatus, paymentMode) {
+export function fetchorders(limit, offset, status, keyword, paymentStatus, paymentMode, toDate, fromDate) {
   return async function fetchordersThunk(dispatch, getState) {
     try {
-      await service.ordersdata(limit, offset, status, keyword, paymentStatus, paymentMode).then(
+      await service.ordersdata(limit, offset, status, keyword, paymentStatus, paymentMode,  toDate, fromDate).then(
         (response) => {
-          console.log(response);
-          dispatch(setbrand(response.data));
+          
+          dispatch(setOrdersDAta(response.data));
         }, (error) => {
         }
       );
@@ -123,9 +114,6 @@ export function downloadInvoiceData(id) {
           link.setAttribute("download", 'invoice.pdf');
           document.body.appendChild(link);
           link.click();
-          // dispatch(downloadFile(response.data))
-
-          // dispatch(setbrand(response.data.result));
         }, (error) => {
         }
       );
@@ -136,117 +124,25 @@ export function downloadInvoiceData(id) {
   }
 }
 
-
-
-
-export function addBrand(payload) {
-  console.log(payload);
-  return async function addBrandsThunk(dispatch) {
+export function orderStatusChange(id, status) {
+  return async function orderStatusChangeThunk(dispatch, getState) {
     try {
-      dispatch(setLoading(true))
-      await service.createBrands(payload).then(
+      await service.orderChangeStatus(id, status).then(
         (response) => {
-          console.log(response.data);
-          dispatch(updateBrandsData(response.data))
-          dispatch(setLoading(false))
-          dispatch(ModalToggle())
-          successHandler('Added Successfully')
+          dispatch(statusToggle());
+          dispatch(updateOrdersDAta({id: id, status:status}));
+          dispatch(successHandler("Order Updated Sucessfully"))
+
         }, (error) => {
-          dispatch(setLoading(false))
-          errorHandler(error.response)
+          dispatch(statusToggle());
+
         }
       );
-    } catch (err) {
 
-    }
-  }
-}
-export function updateBrand(payload) {
-
-  return async function updateBrandsThunk(dispatch) {
-    try {
-      dispatch(setLoading(true))
-      await service.updateBrands(payload.id, payload.name).then(
-        (response) => {
-          console.log(response.data);
-          dispatch(updateBrandsData(response.data))
-          dispatch(setLoading(false))
-          dispatch(ModalToggle())
-          successHandler('Updated Successfully')
-        }, (error) => {
-          dispatch(setLoading(false))
-          errorHandler(error.response)
-        }
-      );
     } catch (err) {
 
     }
   }
 }
 
-export function updateImageBrands(id, file) {
-
-  return async function updateBrandsThunk(dispatch) {
-    try {
-      dispatch(setLoading(true))
-      dispatch(isImageOpenModal())
-      await service.updateBrandsImage(id, file).then(
-        (response) => {
-          console.log(response.data);
-          dispatch(updateBrandsData(response.data))
-          dispatch(setLoading(false))
-          successHandler('Updated Successfully')
-        }, (error) => {
-          dispatch(setLoading(false))
-          errorHandler(error.response)
-        }
-      );
-    } catch (err) {
-
-    }
-  }
-}
-
-export function statusUpdateBrandStatus(payload) {
-  return async function statusUpdateBrandsThunk(dispatch) {
-    try {
-      dispatch(setLoading(true))
-      await service.statusUpdateBrands(payload.id, payload.status).then(
-        (response) => {
-          console.log(response.data);
-          dispatch(updateBrandsData(response.data))
-          dispatch(setLoading(false))
-          dispatch(statusToggle())
-          successHandler('Updated Successfully')
-        }, (error) => {
-          dispatch(setLoading(false))
-          errorHandler(error.response)
-        }
-      );
-    } catch (err) {
-
-    }
-  }
-}
-
-export function statusDeleteBrandStatus(id, status) {
-  return async function statusDeleteBrandsThunk(dispatch) {
-    try {
-      dispatch(setLoading(true))
-      await service.statusUpdateBrands(id, status).then(
-        (response) => {
-          console.log(response.data);
-          dispatch(updateBrandsData(response.data))
-          dispatch(setLoading(false))
-          successHandler('Deleted Successfully')
-        }, (error) => {
-          dispatch(setLoading(false))
-          errorHandler(error.response)
-        }
-      );
-    } catch (err) {
-
-    }
-  }
-}
 

@@ -12,23 +12,29 @@ export async function authHeader(type) {
 		// 	return { Authorization: "Bearer " + token };
 		//   }
 
-		  if (type === "Blob") {
+		if (type === "Blob") {
 			return {
-			  responseType: "blob",
-			  Authorization: "Bearer " + token,
+				responseType: "blob",
+				Authorization: "Bearer " + token,
 			};
-		  } else if (type === "FormData") {
+		} else if (type === "FormData") {
 			return {
-			  "Content-Type": "multipart/form-data",
-			  Authorization: "Bearer " + token,
+				"Content-Type": "multipart/form-data",
+				Authorization: "Bearer " + token,
 			};
-		  } else {
+		} else if (type === "arraybuffer") {
+			return {
+				responseType: "arraybuffer",
+			}
+
+		}
+		else {
 			return { Authorization: "Bearer " + token };
-		  }
+		}
 
 	} else {
 		localService.clear();
 	}
 
-	
+
 }

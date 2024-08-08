@@ -37,7 +37,7 @@ export const staffSlice = createSlice({
     setStaffIdData(state,{payload}){
       state.permissionData=payload.perms
       state.staffDetails=payload.user
-      console.log(payload);
+      
     },
     isOpenModal(state, { payload }) {
       state.isOpenModal = payload
@@ -68,7 +68,7 @@ export function getStaff(limit, offset, status, keyword,role) {
     try {
       await service.getStaff(limit, offset, status, keyword,role).then(
         (response) => {
-          console.log(response.data);
+          
           if (response.data) {
             dispatch(setStaffData(response.data));
             dispatch(setLoading(false))
@@ -89,7 +89,7 @@ export function getStaffById(id) {
     try {
       await service.getStaffById(id).then(
         (response) => {
-          console.log(response.data);
+          
           if (response.data) {
             dispatch(setStaffIdData(response.data));
             dispatch(setLoading(false))
@@ -132,7 +132,7 @@ export function updateStaff(body) {
     try {
       await service.updateStaff(body.id,body).then(
         (response) => {
-          console.log(response.data);
+          
           if (response.data) {
             dispatch(setLoading(false))
             dispatch(updateStaffDetails(response.data))

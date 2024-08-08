@@ -36,7 +36,6 @@ const EditPage = () => {
   }
 
   const submit = () => {
-    console.log({ editerData: storeVar.pageDesc, textData: formVar.editerData });
 
     dispatch(updatePage({ pageId: formVar.pageId, desc: formVar.editerData, title: storeVar.pageTitle }))
   }

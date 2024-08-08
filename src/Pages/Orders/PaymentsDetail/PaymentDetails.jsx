@@ -11,19 +11,11 @@ const BrandTable = () => {
   const storeVar = useSelector(state => state.payment)
   const paymentId = new URLSearchParams(location.search).get('id');
 
-  console.log(storeVar.paymentDetails);
 
 
   useEffect(() => {
     dispatch(paymentsDataById(paymentId))
   }, []);
-
-
-  console.log(paymentId);
-
-
-
-
 
   return (
     <Fragment>

@@ -14,7 +14,7 @@ const initialState = {
   loadingStatus: STATUS.IDLE,
   sliderData: [],
   isOpenModal: false,
-  isStatusOpenModal:false,
+  isStatusOpenModal: false,
   isImageOpenModal: false,
 
 }
@@ -24,36 +24,34 @@ export const sliderSlice = createSlice({
   initialState,
   reducers: {
     setSliderData(state, { payload }) {
-      payload.result.forEach(element => { 
-        if(element.status==='ACTIVE'){
-          element.bgClass='font-success'
-        }else if(element.status==='PENDING'){
-          element.bgClass='font-warning'
-        }else if(element.status==='DEACTIVE'){
-          element.bgClass='font-danger'
+      payload.result.forEach(element => {
+        if (element.status === 'ACTIVE') {
+          element.bgClass = 'font-success'
+        } else if (element.status === 'PENDING') {
+          element.bgClass = 'font-warning'
+        } else if (element.status === 'DEACTIVE') {
+          element.bgClass = 'font-danger'
         }
       });
       state.sliderData = payload.result
     },
     updateSliderData(state, { payload }) {
       const objIndex = state.sliderData.findIndex((obj) => obj.id === payload.id);
-      if(objIndex>=0){
-        if(payload.status==='ACTIVE'){
-          payload.bgClass='font-success'
-        }else if(payload.status==='PENDING'){
-          payload.bgClass='font-warning'
-        }else if(payload.status==='DEACTIVE'){
-          payload.bgClass='font-danger'
+      if (objIndex >= 0) {
+        if (payload.status === 'ACTIVE') {
+          payload.bgClass = 'font-success'
+        } else if (payload.status === 'PENDING') {
+          payload.bgClass = 'font-warning'
+        } else if (payload.status === 'DEACTIVE') {
+          payload.bgClass = 'font-danger'
         }
-        state.sliderData[objIndex]=payload
+        state.sliderData[objIndex] = payload
       }
     },
-    sliceSlider(state,{payload}){
-      console.log(payload);
+    sliceSlider(state, { payload }) {
       const objIndex = state.sliderData.findIndex((obj) => obj.id === payload.id);
-      console.log({objIndex,data:state.sliderData[objIndex]});
-      if(objIndex>=0){
-        state.sliderData.splice(objIndex,1)
+      if (objIndex >= 0) {
+        state.sliderData.splice(objIndex, 1)
       }
       SweetAlert.fire(
         'Deleted!',
@@ -61,7 +59,7 @@ export const sliderSlice = createSlice({
         'success'
       );
     },
-    pushSlider (state,{payload}){
+    pushSlider(state, { payload }) {
       state.sliderData.push(payload)
     },
 
@@ -86,8 +84,8 @@ export const sliderSlice = createSlice({
   }
 })
 
-export const { setSliderData, updateSliderData,pushSlider, isOpenModal, 
-  ModalToggle, isOpenStatusModal,statusToggle, sliceSlider, ImagestatusToggle, isImageOpenModal } = sliderSlice.actions;
+export const { setSliderData, updateSliderData, pushSlider, isOpenModal,
+  ModalToggle, isOpenStatusModal, statusToggle, sliceSlider, ImagestatusToggle, isImageOpenModal } = sliderSlice.actions;
 
 export default sliderSlice.reducer;
 
@@ -117,6 +115,7 @@ export function addSlider(payload) {
         (response) => {
           dispatch(setLoading(false))
           dispatch(ImagestatusToggle())
+          dispatch(updateSliderData(response.data))
           successHandler('Added Successfully')
         }, (error) => {
           dispatch(setLoading(false))
@@ -151,7 +150,7 @@ export function statusUpdateSlider(payload) {
   return async function statusUpdateSliderThunk(dispatch) {
     try {
       dispatch(setLoading(true))
-      await service.statusUpdateSlider(payload.id,{status: payload.status}).then(
+      await service.statusUpdateSlider(payload.id, { status: payload.status }).then(
         (response) => {
           dispatch(updateSliderData(response.data))
           dispatch(statusToggle())
@@ -172,7 +171,7 @@ export function updateType(id, type) {
   return async function updateTypeThunk(dispatch) {
     try {
       dispatch(setLoading(true))
-      await service.statusUpdateSlider(id, {type: type}).then(
+      await service.statusUpdateSlider(id, { type: type }).then(
         (response) => {
           dispatch(updateSliderData(response.data))
           dispatch(ModalToggle())

@@ -47,7 +47,7 @@ const BrandTable = () => {
       currentPage: page,
       offset: offset
     }))
-    dispatch(fetchbrand(formVar.limit, offset, formVar.status))
+    dispatch(fetchbrand(formVar.limit, offset, formVar.status, formVar.keyword))
   };
   const searchState = (e) => {
     setFormVar((prevFormVar) => ({ ...prevFormVar, keyword: e.target.value }))
@@ -65,17 +65,19 @@ const BrandTable = () => {
     })
       .then((result) => {
         if (result.value) {
-          console.log(data);
+          
           dispatch(statusDeleteBrandStatus(data.id, 'DELETED'))
 
         }
       });
   }
   const ImageEditModal = (data) => {
-    console.log(data);
+    
     dispatch(isImageOpenModal(true))
     setFormVar((prevFormVar) => ({
+      ...prevFormVar,
       id: data.id,
+      bannerImageURL: '',
       modalTitle: 'Update Image',
     }))
   }
@@ -119,7 +121,7 @@ const BrandTable = () => {
       setSubmit(true)
       return null
     }
-    console.log(formVar);
+    
 
     setSubmit(false)
     dispatch(updateImageBrands(formVar.id, formVar.bannerFile))
@@ -287,11 +289,11 @@ const BrandTable = () => {
             </Table>
           </div>
         </Card>
-        {/* {
-          storeVar.totalDegree > 0 &&
-          <Pagination currentPage={formVar.currentPage} totalItem={storeVar.totalDegree}
+        {
+          storeVar.totalBrands > 0 &&
+          <Pagination currentPage={formVar.currentPage} totalItem={storeVar.totalBrands}
             itemsPerPage={formVar.limit} showEllipsisAfter={true} visiblePageCount={3} onPageChange={pageChange} />
-        } */}
+        }
       </Col>
       <CommonModal isOpen={storeVar.isImageOpenModal} title={formVar.modalTitle} toggler={Imagetoggle} >
         <Form>
@@ -310,7 +312,7 @@ const BrandTable = () => {
               maxFiles={1}
               multiple={false}
               // canCancel={false}
-              accept="image/*"
+              // accept="image/*"
               inputContent='Drop A File'
               styles={{
                 dropzone: { width: '100%', height: 150 },

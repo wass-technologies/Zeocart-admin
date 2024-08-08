@@ -17,6 +17,7 @@ const initialState = {
   isOpenModal: false,
   isStatusOpenModal: false,
   isImageOpenModal: false,
+  productImage: [],
 
 };
 
@@ -24,13 +25,24 @@ export const productImagesSlice = createSlice({
   name: 'productImages',
   initialState,
   reducers: {
-    setbrand(state, { payload }) { 
-      state.brandData = payload;
+    setbrand(state, { payload }) {
+      state.productImage = payload.productImage.filter(img => img.type === "IMAGE");
+      state.productURL = payload.productImage.filter(img => img.type === "VIDEO");
+
     },
     updateImageData(state, { payload }) {
       const objIndex = state.brandData.findIndex((obj) => obj.id === payload.id);
       if (objIndex >= 0) {
         state.brandData[objIndex].id = payload.id
+      }
+    },
+    pushImageData(state, { payload }) {
+      state.productImage.push(payload)
+    },
+    sliceImageData(state, { payload }) {
+      const objIndex = state.productImage.findIndex((obj) => obj.id === payload);
+      if (objIndex >= 0) {
+        state.productImage.splice(objIndex, 1)
       }
     },
     isOpenModal(state, { payload }) {
@@ -54,7 +66,7 @@ export const productImagesSlice = createSlice({
   },
 });
 
-export const { setbrand, updateImageData, DeleteBrandsData, isOpenModal, isImageOpenModal, ModalToggle, setFaqsSpecializationData, isOpenStatusModal, statusToggle, ImagestatusToggle } = productImagesSlice.actions;
+export const { setbrand, updateImageData, DeleteBrandsData, sliceImageData, pushImageData, isOpenModal, isImageOpenModal, ModalToggle, setFaqsSpecializationData, isOpenStatusModal, statusToggle, ImagestatusToggle } = productImagesSlice.actions;
 export default productImagesSlice.reducer;
 
 export function fetchProductImage(id, limit, keyword, offset, status) {
@@ -62,7 +74,7 @@ export function fetchProductImage(id, limit, keyword, offset, status) {
     try {
       await service.productImageData(id, limit, keyword, offset, status).then(
         (response) => {
-          console.log(response);
+
           dispatch(setbrand(response.data));
         }, (error) => {
         }
@@ -73,17 +85,16 @@ export function fetchProductImage(id, limit, keyword, offset, status) {
     }
   }
 }
-export function addProductImage(id, file) {
+export function addProductImage(id, priority, file) {
   return async function addProductImageThunk(dispatch, getState) {
     try {
       dispatch(setLoading(true))
-      await service.addproductImageData(id, file).then(
+      await service.addproductImageData(id, priority, file).then(
         (response) => {
-          console.log(response);
           dispatch(isImageOpenModal())
           dispatch(setLoading(false))
           successHandler('Added Successfully')
-          dispatch(updateImageData(response.data)); 
+          dispatch(pushImageData(response.data));
 
         }, (error) => {
         }
@@ -101,11 +112,11 @@ export function addProductImageUrl(id, url) {
       dispatch(setLoading(true))
       await service.addproductURLData(id, url).then(
         (response) => {
-          console.log(response);
-          dispatch(isImageOpenModal())
+
+          dispatch(ModalToggle())
           dispatch(setLoading(false))
           successHandler('Url Added Successfully')
-          dispatch(updateImageData(response.data)); 
+          dispatch(updateImageData(response.data));
 
         }, (error) => {
         }
@@ -122,8 +133,8 @@ export function statusDeleteProduct(id, status) {
       dispatch(setLoading(true))
       await service.deleteProductImagesData(id, status).then(
         (response) => {
-          dispatch(updateImageData(response.data)); 
-          console.log(response.data);
+          dispatch(sliceImageData(id));
+
           dispatch(setLoading(false))
           successHandler('Deleted Successfully')
         }, (error) => {

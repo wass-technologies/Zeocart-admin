@@ -96,7 +96,6 @@ export function getAdvertisement(limit, offset, status) {
         (response) => {
           dispatch(setLoading(false))
           dispatch(setAdvertisementData(response.data))
-          console.log(response.data);
         }, (error) => {
           dispatch(setLoading(false))
           errorHandler(error.response)
@@ -129,7 +128,6 @@ export function addAdvertisement(name,url,urType, imageType, file) {
 
 
 export function updateImageAdvertisement(id, file) {
-  console.log(file);
   return async function updateImageAdvertisementThunk(dispatch) {
     try {
       dispatch(setLoading(true))
@@ -195,13 +193,11 @@ export function statusUpdateAdvertisement(payload) {
 
 
 export function deleteAdvertisement(payload) {
-  console.log(payload);
   return async function statusUpdateAdvertisementThunk(dispatch) {
     try {
       dispatch(setLoading(true))
       await service.updateAdvertisementStatus(payload.id,payload.status).then(
         (response) => {
-          console.log(response.data);
           dispatch(updateadvertisementData(response.data))
           dispatch(setLoading(false))
           successHandler('Deleted Successfully')

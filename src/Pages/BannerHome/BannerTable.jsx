@@ -6,14 +6,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import CommonModal from '../../Components/Modals/modal';
 import { useNavigate } from "react-router-dom";
 import Dropzone from 'react-dropzone-uploader';
-import { updateBanner,  getBanner,  isImageOpenModal, ModalToggle, isOpenModal, updateBannerUrl, getBannerCopy } from '../../store/bannerSlice';
+import { updateBanner, getBanner, isImageOpenModal, ModalToggle, isOpenModal, updateBannerUrl, getBannerCopy } from '../../store/bannerSlice';
 import { watchCategoryId } from '../../shared/_helper/category-id';
 import { headphoneCategoryId } from '../../shared/_helper/category-id';
 
 
 const BannerTable = () => {
   const storeVar = useSelector(state => state.banner)
-  console.log(storeVar);
   const dispatch = useDispatch();
   const history = useNavigate();
   const toggle = () => dispatch(ModalToggle());
@@ -40,7 +39,6 @@ const BannerTable = () => {
 
 
   const EditToggleModal = (data) => {
-    console.log(data);
     dispatch(isOpenModal(true))
     setFormVar((prevFormVar) => ({
       ...prevFormVar,
@@ -52,12 +50,13 @@ const BannerTable = () => {
   }
 
   const ImageEditBannerModal = (data) => {
-    console.log(data);
     dispatch(isImageOpenModal(true))
     setFormVar((prevFormVar) => ({
       ...prevFormVar,
       bannerId: data.id,
       modalTitle: 'Update Banner',
+      bannerFile: null,
+      bannerImageURL: null,
     }))
   }
 
@@ -67,7 +66,7 @@ const BannerTable = () => {
       return null
     }
     setSubmit(false)
-    dispatch(updateBanner(formVar.bannerId, formVar.bannerFile ))
+    dispatch(updateBanner(formVar.bannerId, formVar.bannerFile))
   }
 
 
@@ -100,10 +99,9 @@ const BannerTable = () => {
       return "Files is required";
     }
   }
- const submitUrl = () => {
-  console.log(formVar);
-  dispatch(updateBannerUrl(formVar.bannerId, formVar.redirectId))
- }
+  const submitUrl = () => {
+    dispatch(updateBannerUrl(formVar.bannerId, formVar.redirectId))
+  }
 
   return (
     <Fragment>
@@ -130,12 +128,22 @@ const BannerTable = () => {
                     </td>
                     <th scope='row'>{item.redirectId}</th>
                     <td>
-                      <span className={`${item.bgClass} w-50 rounded-1 p-1 me-2 d-flex align-items-center`}>
-                        {item.status === 'ACTIVE' && <CheckCircle />}
-                        {item.status === 'PENDING' && <CheckCircle />}
-                        {item.status === 'DEACTIVE' && <XCircle />}
-                        &nbsp; {item.status}
-                      </span>
+                      {
+                        item.status === 'ACTIVE' && <>
+                          <span className={`font-success rounded-1 p-1 me-2 d-flex align-items-center`}>
+                            {item.status === 'ACTIVE' && <CheckCircle />}
+                            &nbsp; {item.status}
+                          </span>
+                        </>
+                      }
+                      {
+                        item.status === 'PENDING' && <>
+                          <span className={`font-warning rounded-1 p-1 me-2 d-flex align-items-center`}>
+                            {item.status === 'PENDING' && <CheckCircle />}
+                            &nbsp; {item.status}
+                          </span>
+                        </>
+                      }
                     </td>
                     <td>
                       <div className='d-flex gap-2'>
@@ -160,12 +168,22 @@ const BannerTable = () => {
                     </td>
                     <th scope='row'>{item.redirectId}</th>
                     <td>
-                      <span className={`${item.bgClass} w-50 rounded-1 p-1 me-2 d-flex align-items-center`}>
-                        {item.status === 'ACTIVE' && <CheckCircle />}
-                        {item.status === 'PENDING' && <CheckCircle />}
-                        {item.status === 'DEACTIVE' && <XCircle />}
-                        &nbsp; {item.status}
-                      </span>
+                      {
+                        item.status === 'ACTIVE' && <>
+                          <span className={`font-success rounded-1 p-1 me-2 d-flex align-items-center`}>
+                            {item.status === 'ACTIVE' && <CheckCircle />}
+                            &nbsp; {item.status}
+                          </span>
+                        </>
+                      }
+                      {
+                        item.status === 'PENDING' && <>
+                          <span className={`font-warning rounded-1 p-1 me-2 d-flex align-items-center`}>
+                            {item.status === 'PENDING' && <CheckCircle />}
+                            &nbsp; {item.status}
+                          </span>
+                        </>
+                      }
                     </td>
                     <td>
                       <div className='d-flex gap-2'>
@@ -216,7 +234,7 @@ const BannerTable = () => {
           </FormGroup>
         </Form>
         <ModalFooter>
-          <Btn attrBtn={{ color: 'secondary', onClick: toggle }} >Close</Btn>
+          <Btn attrBtn={{ color: 'secondary', onClick: Imagetoggle }} >Close</Btn>
           <Btn attrBtn={{ color: 'primary', onClick: submitDegree }}>Save Changes</Btn>
         </ModalFooter>
       </CommonModal>

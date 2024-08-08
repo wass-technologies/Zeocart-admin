@@ -7,7 +7,7 @@ import CommonModal from '../../Components/Modals/modal';
 import Dropzone from 'react-dropzone-uploader';
 import { getCategory } from '../../store/categorySlice';
 import { getsubCategory } from '../../store/subCategorySlice';
-import { fetchProduct, addProduct, BulkModalToggle, statusToggle, UpdateProductStatus, statusDeleteProductsStatus, isOpenModal, isOpenBulkModal, ModalToggle, isOpenStatusModal, isImageOpenModal, ImagestatusToggle, updateImageBrands, updateProductsData } from '../../store/productSlice';
+import { fetchProduct, addProduct, BulkModalToggle, statusToggle, UpdateProductStatus, statusDeleteProductsStatus, isOpenModal, isOpenBulkModal, ModalToggle, isOpenStatusModal, updateImageBrands, updateProductsData, setproductsBulkUpload } from '../../store/productSlice';
 import { fetchbrand } from '../../store/brandsSlice';
 import CustomizerContext from '../../_helper/Customizer';
 import Pagination from '../../Components/Pagination/Pagination';
@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 
 const ProductTable = () => {
   const storeVar = useSelector(state => state.products)
+  console.log(storeVar);
   const catVar = useSelector(state => state.category)
   const subcatVar = useSelector(state => state.subcategory)
   const brandsVar = useSelector(state => state.brands)
@@ -44,7 +45,7 @@ const ProductTable = () => {
     modalTitle: null,
     editState: false,
     cityId: null,
-    brandId: null,
+    brandId: '',
     brandName: '',
     bannerFile: null,
     catId: '',
@@ -59,7 +60,7 @@ const ProductTable = () => {
     length: '',
     breadth: '',
     height: '',
-    ACTUAL_WEIGHT: null,
+    ACTUAL_WEIGHT: '',
     VOLUMETRIC_WEIGHT: '',
     shortDesc: '',
     desc: '',
@@ -69,7 +70,11 @@ const ProductTable = () => {
     selectedColor: '#000000',
     availability: '',
     skuid: '',
-
+    zipFile: '',
+    zipFileUrl: '',
+    variantId: '',
+    productId: '',
+    productCategoryID: '',
 
 
   });
@@ -78,6 +83,8 @@ const ProductTable = () => {
     dispatch(fetchProduct(formVar.limit, formVar.offset, formVar.status, formVar.catstatus, formVar.subcatstatus, formVar.keyword,));
     dispatch(getCategory('100', '0', 'ACTIVE', '', ''));
     dispatch(getsubCategory('100', '0', 'ACTIVE', '', ''))
+    dispatch(fetchbrand(formVar.limit, formVar.offset, "ACTIVE", formVar.keyword,));
+
   }, []);
 
   const pageChange = (page) => {
@@ -105,7 +112,6 @@ const ProductTable = () => {
     setFormVar((prevFormVar) => ({ ...prevFormVar, brandId: event.target.value }))
   };
   const handleSelectCatChange = (event) => {
-    setselectedCatOption(event.target.value);
     setFormVar((prevFormVar) => ({ ...prevFormVar, catId: event.target.value }))
     dispatch(getsubCategory('100', '0', 'ACTIVE', event.target.value, ''))
   };
@@ -189,6 +195,8 @@ const ProductTable = () => {
     setFormVar((prevFormVar) => ({ ...prevFormVar, discountedPrice }));
 
     if (formVar.price && discountedPrice) {
+
+
       const price = parseFloat(formVar.price);
       const discountedPriceValue = parseFloat(discountedPrice);
       const discountPercentage = ((price - discountedPriceValue) / price) * 100;
@@ -220,7 +228,7 @@ const ProductTable = () => {
     setFormVar((prevFormVar) => ({
       ...prevFormVar,
       editState: true,
-      brandId: data.id,
+      productId: data.id,
       modalTitle: 'Edit Products',
       title: data.title || '',
       catId: data?.productCategory[0]?.category.id || '',
@@ -231,6 +239,7 @@ const ProductTable = () => {
       selectedColor: data?.productVariant[0]?.name || '',
       availability: data?.productVariant[0]?.availability || '',
       skuid: data?.productVariant[0]?.sku || '',
+      variantId: data?.productVariant[0]?.id || '',
       warrentydays: data.warranty || '',
       warrentymonth: data.warrantyIn || '',
       returnday: data.returnInDays || '',
@@ -244,6 +253,8 @@ const ProductTable = () => {
       VOLUMETRIC_WEIGHT: data.VOLUMETRIC_WEIGHT || '',
       shortDesc: data.shortDesc || '',
       desc: data.desc || '',
+      brandId: data.brand.id || '',
+      productCategoryID: data.productCategory[0].category.id,
     }))
 
   }
@@ -266,7 +277,7 @@ const ProductTable = () => {
       length: '',
       breadth: '',
       height: '',
-      ACTUAL_WEIGHT: null,
+      ACTUAL_WEIGHT: '',
       VOLUMETRIC_WEIGHT: '',
       shortDesc: '',
       desc: '',
@@ -276,6 +287,8 @@ const ProductTable = () => {
       selectedColor: '#000000',
       availability: '',
       skuid: '',
+      variantId: '',
+      brandId: ''
     }))
   }
 
@@ -283,7 +296,10 @@ const ProductTable = () => {
     dispatch(isOpenBulkModal(true))
   }
   const navigate = (id) => {
-    history(`${process.env.PUBLIC_URL}/product-image/` + layoutURL + '?id=' + id)
+    history(`${process.env.PUBLIC_URL}/products/product-image/` + layoutURL + '?id=' + id)
+  }
+  const keywordNavigate = (id) => {
+    history(`${process.env.PUBLIC_URL}/products/product-keywords/` + layoutURL + '?id=' + id)
   }
   const onValueChange = (event) => {
     setStateStatus(event.target.value)
@@ -304,7 +320,7 @@ const ProductTable = () => {
 
 
     setSubmit(false)
-    dispatch(updateImageBrands(formVar.id, formVar.bannerFile))
+    dispatch(setproductsBulkUpload(formVar.bannerFile))
   }
   const filesValid = () => {
     if (!formVar.bannerFile) {
@@ -380,10 +396,10 @@ const ProductTable = () => {
       setSubmit(true)
       return null
     }
-    if (skuidValid()) {
-      setSubmit(true)
-      return null
-    }
+    // if (skuidValid()) {
+    //   setSubmit(true)
+    //   return null
+    // }
     setSubmit(false)
     const data = {
       title: formVar.title,
@@ -411,29 +427,73 @@ const ProductTable = () => {
       ],
       productVariant: [
         {
+
+          id: formVar.variantId,
           name: formVar.selectedColor,
-          price: formVar.price,
-          discount: formVar.discountedPercentage,
-          discountedPrice: formVar.discountedPrice,
-          availability: formVar.availability,
-          sku: formVar.skuid,
+          price: +formVar.price,
+          discount: +formVar.discountedPercentage,
+          discountedPrice: +formVar.discountedPrice,
+          availability: +formVar.availability,
+          productId: formVar.productId,
         }
-      ]
-      , 
-      
-      subCategory: selectedsubCatOption ? [{ subCategoryId: selectedsubCatOption }] : [],
+      ],
 
-      // subCategory: [
-        
-      //   {
-      //     subCategoryId: selectedsubCatOption
-      //   }
+      subCategory: formVar.subCatId ? [{ subCategoryId: formVar.subCatId, productId: formVar.productId }] : [],
 
-      // ]
+    }
+    const dataEdit = {
+      title: formVar.title,
+      brandId: formVar.brandId,
+      shortDesc: formVar.shortDesc,
+      desc: formVar.desc,
+      warranty: formVar.warrentydays,
+      warrantyIn: formVar.warrentymonth,
+      returnInDays: formVar.returnday,
+      returnAvailable: returnAvailable,
+      freeShipping: formVar.freeShipping,
+      coupan: "",
+      minFreeShipping: 0,
+      gstBillAvailable: formVar.gstbill,
+      bestSeller: formVar.gstbill,
+      ACTUAL_WEIGHT: JSON.parse(formVar.ACTUAL_WEIGHT),
+      VOLUMETRIC_WEIGHT: JSON.parse(formVar.VOLUMETRIC_WEIGHT),
+      LENGTH: parseInt(formVar.length),
+      BREADTH: parseInt(formVar.breadth),
+      HEIGHT: parseInt(formVar.height),
+      category: [
+        {
+          id: formVar.productCategoryID,
+          categoryId: formVar.catId,
+        }
+      ],
+      productVariant: [
+        {
+
+          id: formVar.variantId,
+          name: formVar.selectedColor,
+          price: +formVar.price,
+          discount: +formVar.discountedPercentage,
+          discountedPrice: +formVar.discountedPrice,
+          availability: +formVar.availability,
+          productId: formVar.productId,
+        }
+      ],
+
+      productSubCategory: formVar.subCatId ? [{ subCategoryId: formVar.subCatId, productId: formVar.productId }] : [],
+
+    }
+    const update = {
+      limit: formVar.limit,
+      offset: formVar.offset,
+      status: formVar.status,
+      categoryId: formVar.catstatus,
+      subCategoryId: formVar.subcatstatus,
+      keyword: formVar.keyword
+
     }
     if (formVar.editState) {
-      console.log(data);
-      dispatch(updateProductsData(formVar.brandId, { data }))
+
+      dispatch(updateProductsData(formVar.productId, dataEdit, update))
     } else {
       dispatch(addProduct(data))
     }
@@ -456,11 +516,7 @@ const ProductTable = () => {
       return "Category is required";
     }
   }
-  // const SubCategoryValid = () => {
-  //   if (!formVar.subCatId) {
-  //     return "Sub Category is required";
-  //   }
-  // }
+
   const shortDescValid = () => {
     if (!formVar.shortDesc) {
       return "Short Description is required";
@@ -522,11 +578,11 @@ const ProductTable = () => {
       return "Availibility is required";
     }
   }
-  const skuidValid = () => {
-    if (!formVar.skuid) {
-      return "Sku Id is required";
-    }
-  }
+  // const skuidValid = () => {
+  //   if (!formVar.skuid) {
+  //     return "Sku Id is required";
+  //   }
+  // }
 
 
   // called every time a file's `status` changes
@@ -643,7 +699,7 @@ const ProductTable = () => {
                           src={item.productImage && item.productImage.length > 0 ? item.productImage[0]?.file : noimagefound}
                           alt="" />
                       </td>
-                      <td>{item?.productVariant && item.productVariant[0]?.onHand}</td>
+                      <td>{item?.productVariant && item.productVariant[0]?.availability}</td>
                       <td>
                         {
                           item.status === 'APPROVED' && <>
@@ -679,6 +735,10 @@ const ProductTable = () => {
                           <div className='cursor-pointer font-success action-icon' onClick={(e) => navigate(item.id)}>
                             <Image />
                             <div className="tooltipCustom">Image List</div>
+                          </div>
+                          <div className='cursor-pointer font-success action-icon' onClick={(e) => keywordNavigate(item.id)}>
+                            <AlignJustify />
+                            <div className="tooltipCustom">Keyword List</div>
                           </div>
                           <div className='cursor-pointer action-icon'>
                             <FileText onClick={(e) => statusToggleModal(item)} />
@@ -747,7 +807,10 @@ const ProductTable = () => {
             <Row>
               <Col>
                 <Label className="col-form-label" for="recipient-name">Title</Label>
-                <Input className="form-control" type="text" onChange={(e) => setFormVar((prevFormVar) => ({ ...prevFormVar, title: e.target.value }))} value={formVar.title} />
+                <Input className="form-control" type="text"
+                  minLength={2} maxLength={100}
+                  // onInput={(e) => e.target.value = e.target.value.slice(0, 100)}
+                  onChange={(e) => setFormVar((prevFormVar) => ({ ...prevFormVar, title: e.target.value }))} value={formVar.title} />
 
               </Col>
               <Col>
@@ -775,7 +838,8 @@ const ProductTable = () => {
               <Col>
                 <Label className="col-form-label" for="recipient-name">Category</Label>
                 <Input className="form-control form-control-inverse btn-square" name="select" type="select"
-                  value={formVar.catId} onChange={(e) => setFormVar((prevFormVar) => ({ ...prevFormVar, catId: e.target.value }))}>
+                  value={formVar.catId} onChange={handleSelectCatChange}
+                >
                   <option value="">Select Category</option>
                   {catVar?.categoryData?.map((item, index) => (
                     <option key={item.id} value={item.id}>
@@ -853,7 +917,7 @@ const ProductTable = () => {
               </Col>
               <Col>
                 <Label className="col-form-label" for="recipient-name">SKU(Stock Keeping Unit)</Label>
-                <Input className="form-control" type="text" onInput={(e) => e.target.value = e.target.value.replace(/[^0-9]/g, "").replace(" ", "").slice(0, 10)} onChange={(e) => setFormVar((prevFormVar) => ({ ...prevFormVar, skuid: e.target.value }))} value={formVar.skuid} />
+                <Input className="form-control" type="text" value={formVar.skuid} disabled />
               </Col>
             </Row>
             <Row>
@@ -861,7 +925,7 @@ const ProductTable = () => {
                 {submit && availabilityValid() ? <span className='d-block font-danger'>{availabilityValid()}</span> : ""}
               </Col>
               <Col>
-                {submit && skuidValid() ? <span className='d-block font-danger'>{skuidValid()}</span> : ""}
+                {/* {submit && skuidValid() ? <span className='d-block font-danger'>{skuidValid()}</span> : ""} */}
               </Col>
             </Row>
 
@@ -940,8 +1004,8 @@ const ProductTable = () => {
                 <Label className="col-form-label" for="recipient-name">Best Seller</Label>
                 <Input className="form-control form-control-inverse btn-square" name="select" type="select"
                   value={formVar.bestSeller} onChange={handleBestSellerChange}>
-                  <option value="true">TRUE</option>
-                  <option value="false">FALSE</option>
+                  <option value="true">YES</option>
+                  <option value="false">NO</option>
                 </Input>
               </Col>
               <Col>

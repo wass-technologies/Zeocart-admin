@@ -16,7 +16,7 @@ import Pagination from '../../Components/Pagination/Pagination';
 
 const Coupons = () => {
   const storeVar = useSelector(state => state.coupon)
-  console.log(storeVar);
+  
 
 
   const dispatch = useDispatch();
@@ -111,7 +111,7 @@ const Coupons = () => {
     dispatch(isOpenStatusModal(true))
   }
   const statusEditModal = (data) => {
-    console.log(data);
+    
     dispatch(isOpenModal(true))
     setFormVar((prevFormVar) => ({
       ...prevFormVar,
@@ -127,7 +127,7 @@ const Coupons = () => {
 
 
   const ImageEditModal = (data) => {
-    console.log(data);
+    
 
     dispatch(isImageOpenModal(true))
     setFormVar((prevFormVar) => ({
@@ -174,7 +174,7 @@ const Coupons = () => {
       return null
     }
     setSubmit(false)
-    console.log(formVar);
+    
     dispatch(addCoupon({
       couponCode: formVar.name, discountAmount: formVar.discount, expirationDate: formVar.expirationDate, issuedDate: formVar.issueDate,
       usageLimit: formVar.formlimit, userRestrictions: formVar.userType, coupanFor: formVar.type, minPurchaseAmount: formVar.minpurchase, status: formVar.formstatus
@@ -206,7 +206,7 @@ const Coupons = () => {
       return null
     }
     setSubmit(false)
-    console.log(formVar);
+    
     dispatch(DetailsUpdateAdvertisement(formVar.id, formVar.name, formVar.url, formVar.type, formVar.urlType))
   }
 
@@ -222,7 +222,7 @@ const Coupons = () => {
     })
       .then((result) => {
         if (result.value) {
-          console.log(data);
+          
           dispatch(deleteAdvertisement({ id: data.id, status: 'DELETED' }))
 
         }
@@ -366,10 +366,10 @@ const Coupons = () => {
                     </td>
                     <td>
                       <div className='d-flex gap-2'>
-                        <div className='cursor-pointer font-primary action-icon'>
+                        {/* <div className='cursor-pointer font-primary action-icon'>
                           <Edit onClick={(e) => statusEditModal(item)} />
                           <div className="tooltipCustom">Edit</div>
-                        </div>
+                        </div> */}
                         <div className='cursor-pointer action-icon'>
                           <FileText onClick={(e) => statusToggleModal(item)} />
                           <div className="tooltipCustom">Status Update</div>

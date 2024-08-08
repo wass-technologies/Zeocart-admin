@@ -36,7 +36,6 @@ const BannerTable = () => {
 
 
   const EditToggleModal = (data) => {
-    console.log(data);
     dispatch(isOpenModal(true))
     setFormVar((prevFormVar) => ({
       ...prevFormVar,
@@ -48,7 +47,6 @@ const BannerTable = () => {
   }
 
   const ImageEditBannerModal = (data) => {
-    console.log(data);
     dispatch(isImageOpenModal(true))
     setFormVar((prevFormVar) => ({
       ...prevFormVar,
@@ -97,7 +95,6 @@ const BannerTable = () => {
     }
   }
  const submitUrl = () => {
-  console.log(formVar);
   dispatch(updateBannerUrl(formVar.bannerId, formVar.redirectId))
  }
 

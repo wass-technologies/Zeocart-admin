@@ -93,7 +93,7 @@ export function updatecategoryData(payload) {
       dispatch(setLoading(true))
       await service.updateCategory(payload.id,payload.name).then(
         (response) => {
-          console.log(response);
+        
           dispatch(updatecategorysData(response.data))
           dispatch(setLoading(false))
           dispatch(ModalToggle())
@@ -109,13 +109,13 @@ export function updatecategoryData(payload) {
   }
 }
 export function statusUpdateCategory(payload) {
-  console.log(payload);
+
   return async function statusUpdateCategoryThunk(dispatch) {
     try {
       dispatch(setLoading(true))
       await service.updateStatusData(payload.id,payload.status).then(
         (response) => {
-          console.log(response.data);
+        
           dispatch(updatecategorysData(response.data))
           dispatch(setLoading(false))
           dispatch(statusToggle())
@@ -137,7 +137,7 @@ export function statusDeleteCategoryStatus(id, status) {
       dispatch(setLoading(true))
       await service.statusUpdateCategorys(id, status).then(
         (response) => {
-          console.log(response.data);
+        
           dispatch(updatecategorysData(response.data))
           dispatch(setLoading(false))
           successHandler('Deleted Successfully')

@@ -33,10 +33,11 @@ export const faqsSlice = createSlice({
       }
     },
     pushFaqs(state, { payload }) {
+      console.log(payload);
       state.faqsData.push(payload)
     },
     setFaqsSpecializationData(state, { payload }) {
-      console.log(payload);
+      
       state.faqSpecializationData = payload.result
     },
     isOpenModal(state, { payload }) {
@@ -66,7 +67,7 @@ export function getFaqs(limit, offset, status, keyword) {
         (response) => {
           dispatch(setLoading(false))
           dispatch(setFaqsData(response.data))
-          console.log(response.data);
+          
         }, (error) => {
           dispatch(setLoading(false))
           errorHandler(error.response)
@@ -123,7 +124,7 @@ export function statusUpdateFaqStatus(payload) {
       dispatch(setLoading(true))
       await service.statusUpdateFaqs(payload.id, payload.status).then(
         (response) => {
-          console.log(response.data);
+          
           dispatch(updateFaqsData(response.data))
           dispatch(statusToggle())
           dispatch(setLoading(false))
@@ -145,7 +146,7 @@ export function statusDeleteFaq(id, status) {
       dispatch(setLoading(true))
       await service.statusUpdateFaqs(id, status).then(
         (response) => {
-          console.log(response.data);
+          
           dispatch(updateFaqsData(response.data))
           dispatch(setLoading(false))
           successHandler('Deleted Successfully')
@@ -167,7 +168,7 @@ export function getFaqsSpecialization(limit, offset, keyword, faqId) {
         (response) => {
           dispatch(setLoading(false))
           dispatch(setFaqsSpecializationData(response.data))
-          console.log(response.data);
+          
         }, (error) => {
           dispatch(setLoading(false))
           errorHandler(error.response)

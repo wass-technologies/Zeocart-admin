@@ -13,6 +13,7 @@ import SweetAlert from 'sweetalert2';
 
 const FaqsTable = () => {
   const storeVar = useSelector(state => state.faqs)
+  console.log(storeVar);
   const dispatch = useDispatch();
   const history = useNavigate();
   const toggle = () => dispatch(ModalToggle());
@@ -45,7 +46,6 @@ const FaqsTable = () => {
     dispatch(getFaqs(formVar.limit, formVar.offset, formVar.status, e.target.value))
   }
   const pageChange = (page) => {
-    console.log(page);
     const offset = formVar.limit * (page - 1)
     setFormVar((prevFormVar) => ({
       ...prevFormVar,
@@ -185,7 +185,7 @@ const FaqsTable = () => {
               </thead>
               <tbody>
                 {storeVar.faqsData?.map((item, index) => (
-                  <tr key={item.id}>
+                  <tr key={index}>
                     <th scope='row'>{index + 1}</th>
                     <td>{item.question} </td>
                     <td>{item.answer}</td>

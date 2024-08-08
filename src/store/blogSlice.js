@@ -65,7 +65,7 @@ export function fetchblogs(limit, offset, status, keyword) {
     try {
       await service.getBlogs(limit, offset, status,  keyword).then(
         (response) => {
-          console.log(response);
+          
           dispatch(setblogs(response.data.result));
         }, (error) => {
         }
@@ -77,13 +77,13 @@ export function fetchblogs(limit, offset, status, keyword) {
   }
 }
 export function addBlogs(title,shortDesc, Desc1) {
-  console.log(title,shortDesc, Desc1);
+  
   return async function addBlogssThunk(dispatch) {
     try { 
       dispatch(setLoading(true))
       await service.createBlogs(title,shortDesc, Desc1).then(
         (response) => {
-          console.log(response.data);
+          
           dispatch(updateBlogsData(response.data))
           dispatch(setLoading(false))
           dispatch(ModalToggle())
@@ -99,13 +99,13 @@ export function addBlogs(title,shortDesc, Desc1) {
   }
 }
 export function updateBlogs(payload) {
-console.log(payload);
+
   return async function updateBlogsThunk(dispatch) {
     try {
       dispatch(setLoading(true))
       await service.updateBlogsdata(payload.id, payload.title, payload.shortDesc, payload.desc1).then(
         (response) => {
-          console.log(response.data);
+          
           dispatch(updateBlogsData(response.data))
           dispatch(setLoading(false))
           dispatch(ModalToggle())
@@ -129,7 +129,7 @@ export function updateImageBlogs(id, file, type) {
       dispatch(isImageOpenModal())
       await service.updateBlogsImage(id, file, type).then(
         (response) => {
-          console.log(response.data);
+          
           dispatch(setLoading(false))
           successHandler('Updated Successfully')
         }, (error) => {
@@ -145,13 +145,13 @@ export function updateImageBlogs(id, file, type) {
 
 
 export function statusUpdateBlogStatus(payload) {
-  console.log(payload.status);
+  
   return async function statusUpdateBlogsThunk(dispatch) {
     try {
       dispatch(setLoading(true))
       await service.statusUpdateBlogs(payload.id, payload.status).then(
         (response) => {
-          console.log(response.data);
+          
           dispatch(updateBlogsData(response.data))
           dispatch(setLoading(false))
           dispatch(statusToggle())
@@ -167,13 +167,13 @@ export function statusUpdateBlogStatus(payload) {
   }
 }
 
-export function statusDeleteBrandStatus(id, status) {
-  return async function statusDeleteBrandsThunk(dispatch) {
+export function statusDeleteBlogsStatus(id, status) {
+  return async function statusDeleteBlogsThunk(dispatch) {
     try {
       dispatch(setLoading(true))
-      await service.statusUpdateBrands(id, status).then(
+      await service.statusUpdateBlogs(id, status).then(
         (response) => {
-          console.log(response.data);
+          
           dispatch(updateBlogsData(response.data))
           dispatch(setLoading(false))
           successHandler('Deleted Successfully')
